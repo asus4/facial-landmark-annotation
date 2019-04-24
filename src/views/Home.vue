@@ -1,17 +1,28 @@
 <template lang="pug">
 .home
-  button(@click="decrement") -
-  span {{ count }}
-  button(@click="increment") +
+  Menu
+  LandmarkEditor
+  .columns
+    .column.is-one-third
+      // Frame Incrementer
+      button.button(@click="decrement")
+        b-icon(icon="minus")
+      span {{ count }}
+      button.button(@click="increment")
+        b-icon(icon="plus")
 </template>
-
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { AppModule } from '@/store/modules/app'
+import LandmarkEditor from '@/components/LandmarkEditor.vue'
+import Menu from '@/components/Menu.vue'
 
 @Component({
-  components: {},
+  components: {
+    LandmarkEditor,
+    Menu,
+  },
 })
 export default class Home extends Vue {
 
@@ -26,6 +37,7 @@ export default class Home extends Vue {
   private decrement() {
     AppModule.prevFrame()
   }
+
 
 }
 </script>

@@ -16,6 +16,9 @@ class App extends VuexModule implements IAppState {
 
   @Mutation
   public prevFrame() {
+    if (this.currentFrame === 0) {
+      return
+    }
     this.currentFrame--
   }
 }
