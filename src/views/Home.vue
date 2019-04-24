@@ -1,29 +1,30 @@
-<template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
-    <button @click="increment">+</button>
-    <button @click="decrement">-</button>
-  </div>
+<template lang="pug">
+.home
+  button(@click="decrement") -
+  span {{ count }}
+  button(@click="increment") +
 </template>
+
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import HelloWorld from '@/components/HelloWorld.vue'
+import { AppModule } from '@/store/modules/app'
 
 @Component({
-  components: {
-    HelloWorld,
-  },
+  components: {},
 })
 export default class Home extends Vue {
 
-  increment() {
-    this.$store.commit('increment')
+  private get count(): number {
+    return AppModule.currentFrame
   }
-  
-  decrement () {
-    this.$store.commit('decrement')
+
+  private increment() {
+    AppModule.nextFrame()
+  }
+
+  private decrement() {
+    AppModule.prevFrame()
   }
 
 }
