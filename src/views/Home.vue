@@ -16,6 +16,8 @@
         b-icon(icon="plus")
     .column
       button.button(@click="autoDetect") Auto Detect
+  b-loading(:active.sync="isLoading")
+
 </template>
 
 <script lang="ts">
@@ -23,6 +25,9 @@ import { Component, Vue } from 'vue-property-decorator'
 import { AppModule } from '@/store/modules/app'
 import LandmarkEditor from '@/components/LandmarkEditor.vue'
 import Menu from '@/components/Menu.vue'
+import * as faceapi from 'face-api.js'
+
+console.log(faceapi)
 
 @Component({
   components: {
@@ -32,8 +37,17 @@ import Menu from '@/components/Menu.vue'
 })
 export default class Home extends Vue {
 
+  private isLoading = true
+
   public $refs!: {
     timeSlider: HTMLInputElement;
+  }
+
+  private async mounted() {
+    // TODO put in local
+    const modelpath = 'https://justadudewhohacks.github.io/face-api.js/models'
+    await faceapi.loadSsdMobilenetv1Model(modelpath)
+    this.isLoading = false
   }
 
   private get current(): number {
