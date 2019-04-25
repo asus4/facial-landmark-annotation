@@ -8,16 +8,17 @@
     @seeked="onVideoSeeked"
   )
   svg.overlay(ref="svg" :viewBox="svgViewBox")
-    circle(v-for="{x, y} in landmaks" :cx="x" :cy="y" r="4" draggable="true")
+    LandmarkEditorFace(:landmarks="landmarks")
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { AppModule } from '@/store/modules/app'
 import * as faceapi from 'face-api.js'
+import LandmarkEditorFace from './LandmarkEditorFace.vue'
 
 @Component({
-  components: {},
+  components: { LandmarkEditorFace },
 })
 export default class LandmarkEditor extends Vue {
 
@@ -27,7 +28,7 @@ export default class LandmarkEditor extends Vue {
   }
 
   private svgViewBox = '0 0 1280 720'
-  private landmaks: faceapi.IPoint[] = []
+  private landmarks: faceapi.IPoint[] = []
   private options = new faceapi.TinyFaceDetectorOptions()
 
   private get video() {
@@ -51,14 +52,10 @@ export default class LandmarkEditor extends Vue {
   private async onVideoSeeked() {
     const detections = await faceapi.detectAllFaces(this.video, this.options).withFaceLandmarks()
     if (detections.length <= 0) {
-      this.landmaks = []
+      this.landmarks = []
       return
     }
-    const svg = this.$refs.svg
-    const bbox = svg.getBoundingClientRect()
-    const resized = faceapi.resizeResults(detections, { width: bbox.width, height: bbox.height })
-
-    this.landmaks = detections[0].landmarks.positions
+    this.landmarks = detections[0].landmarks.positions
   }
 }
 </script>
@@ -73,15 +70,4 @@ export default class LandmarkEditor extends Vue {
   left: 0
   width: 100%
   height: 100%
-
-svg
-  circle
-    stroke: #00ff00
-    fill: none
-    cursor: grab
-    &:hover
-      stroke: none
-      fill: #00ff00
-    &:active
-      cursor: grabbing
 </style>
