@@ -1,19 +1,20 @@
 <template lang="pug">
 .editor.is-full
-  video.video(
-    ref="video" muted
-    :src="videoUrl"
-    :current-time.prop="currentTime"
-    @loadeddata="onVideoLoaded"
-    @seeked="onVideoSeeked"
-  )
-  svg.overlay(ref="svg" :viewBox="svgViewBox")
-    LandmarkEditorFace(
-      v-for="(landmarks, index) in faces"
-      :landmarks="landmarks"
-      :key="index"
-      :rootSvg="$refs.svg"
+  .container
+    video(
+      ref="video" muted
+      :src="videoUrl"
+      :current-time.prop="currentTime"
+      @loadeddata="onVideoLoaded"
+      @seeked="onVideoSeeked"
     )
+    svg.overlay(ref="svg" :viewBox="svgViewBox")
+      LandmarkEditorFace(
+        v-for="(landmarks, index) in faces"
+        :landmarks="landmarks"
+        :key="index"
+        :rootSvg="$refs.svg"
+      )
 </template>
 
 <script lang="ts">
