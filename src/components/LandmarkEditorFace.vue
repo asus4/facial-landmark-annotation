@@ -60,7 +60,7 @@ export default class LandmarkEditorFace extends Vue {
     this.svgPoint.x = e.clientX
     this.svgPoint.y = e.clientY
     const p = this.svgPoint.matrixTransform(this.rootSvg.getScreenCTM()!.inverse())
-    Vue.set(this.positions, index, p)
+    Vue.set(this.positions, index, new faceapi.Point(p.x, p.y))
   }
 
   private get allPath(): string {
@@ -85,7 +85,6 @@ export default class LandmarkEditorFace extends Vue {
         path += `L${p.x} ${p.y} `
       }
     })
-
     path += close ? ' Z ' : ' '
     return path
   }
