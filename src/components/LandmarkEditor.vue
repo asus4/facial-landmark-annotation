@@ -28,6 +28,7 @@ export default class LandmarkEditor extends Vue {
 
   private svgViewBox = '0 0 1280 720'
   private landmaks: faceapi.IPoint[] = []
+  private options = new faceapi.TinyFaceDetectorOptions()
 
   private get video() {
     return this.$refs.video
@@ -48,7 +49,7 @@ export default class LandmarkEditor extends Vue {
   }
 
   private async onVideoSeeked() {
-    const detections = await faceapi.detectAllFaces(this.video).withFaceLandmarks()
+    const detections = await faceapi.detectAllFaces(this.video, this.options).withFaceLandmarks()
     if (detections.length <= 0) {
       this.landmaks = []
       return

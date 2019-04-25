@@ -35,6 +35,7 @@ import * as faceapi from 'face-api.js'
 })
 export default class Home extends Vue {
 
+
   public $refs!: {
     timeSlider: HTMLInputElement;
   }
@@ -42,9 +43,11 @@ export default class Home extends Vue {
   private isLoading = true
 
   private async mounted() {
+    // Load models
     // TODO put in local
     const modelpath = 'https://justadudewhohacks.github.io/face-api.js/models'
-    await faceapi.loadSsdMobilenetv1Model(modelpath)
+    // await faceapi.loadSsdMobilenetv1Model(modelpath)
+    await faceapi.loadTinyFaceDetectorModel(modelpath)
     await faceapi.loadFaceLandmarkModel(modelpath)
     this.isLoading = false
   }
