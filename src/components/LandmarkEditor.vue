@@ -8,7 +8,7 @@
     @seeked="onVideoSeeked"
   )
   svg.overlay(ref="svg" :viewBox="svgViewBox")
-    LandmarkEditorFace(:landmarks="landmarks")
+    LandmarkEditorFace(v-for="landmarks in faces" :landmarks="landmarks")
 </template>
 
 <script lang="ts">
@@ -28,7 +28,7 @@ export default class LandmarkEditor extends Vue {
   }
 
   private svgViewBox = '0 0 1280 720'
-  private landmarks: faceapi.IPoint[] = []
+  private faces: faceapi.IPoint[][] = []
   private options = new faceapi.TinyFaceDetectorOptions()
 
   private get video() {
@@ -51,11 +51,7 @@ export default class LandmarkEditor extends Vue {
 
   private async onVideoSeeked() {
     const detections = await faceapi.detectAllFaces(this.video, this.options).withFaceLandmarks()
-    if (detections.length <= 0) {
-      this.landmarks = []
-      return
-    }
-    this.landmarks = detections[0].landmarks.positions
+    this.faces = detections.map((d) => d.landmarks.positions)
   }
 }
 </script>
