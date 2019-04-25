@@ -15,6 +15,7 @@ g
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import { AppModule } from '@/store/modules/app'
+import { TimelineModule, IFace } from '@/store/modules/timeline'
 import * as faceapi from 'face-api.js'
 
 @Component({
@@ -22,8 +23,8 @@ import * as faceapi from 'face-api.js'
 })
 export default class LandmarkEditorFace extends Vue {
 
-  @Prop({ default: [] })
-  public landmarks!: faceapi.FaceLandmarks68
+  @Prop({ default: null })
+  public face!: IFace
 
   @Prop({ default: null })
   public rootSvg!: SVGGraphicsElement
@@ -36,7 +37,7 @@ export default class LandmarkEditorFace extends Vue {
   }
 
   private get positions(): faceapi.IPoint[] {
-    return this.landmarks.positions
+    return this.face.landmarks
   }
 
   private onMouseDown(e: MouseEvent, index: number) {
@@ -65,13 +66,14 @@ export default class LandmarkEditorFace extends Vue {
 
   private get allPath(): string {
     let path = ''
-    path += this.pointToPath(this.landmarks.getJawOutline(), false)
-    path += this.pointToPath(this.landmarks.getLeftEyeBrow(), false)
-    path += this.pointToPath(this.landmarks.getRightEyeBrow(), false)
-    path += this.pointToPath(this.landmarks.getNose(), false)
-    path += this.pointToPath(this.landmarks.getLeftEye(), true)
-    path += this.pointToPath(this.landmarks.getRightEye(), true)
-    path += this.pointToPath(this.landmarks.getMouth(), true)
+    // https://github.com/justadudewhohacks/face-api.js/blob/master/src/classes/FaceLandmarks68.ts
+    path += this.pointToPath(this.face.landmarks.slice(0, 17), false) // getJawOutline
+    path += this.pointToPath(this.face.landmarks.slice(17, 22), false) // getLeftEyeBrow
+    path += this.pointToPath(this.face.landmarks.slice(22, 27), false) // getRightEyeBrow
+    path += this.pointToPath(this.face.landmarks.slice(27, 36), false) // getNose
+    path += this.pointToPath(this.face.landmarks.slice(36, 42), true) // getLeftEye
+    path += this.pointToPath(this.face.landmarks.slice(42, 48), true) // getRightEye
+    path += this.pointToPath(this.face.landmarks.slice(48, 68), true) // getMouth
     return path
   }
 

@@ -1,39 +1,60 @@
+import Vue from 'vue'
 import { VuexModule, Module, Mutation, Action, getModule } from 'vuex-module-decorators'
 import store from '@/store'
 import * as faceapi from 'face-api.js'
+import { AppModule } from './app'
 
-export interface VideoMetaData {
+export interface IVideoMetaData {
   duration: number,
+  frames: number,
   width: number,
   height: number,
 }
 
-export interface Face {
+export interface IFace {
   id: number,
   rect: faceapi.IRect,
   landmarks: faceapi.IPoint[]
 }
 
 export interface ITimelineState {
-  meta: VideoMetaData
-  frames: Face[][]
+  meta: IVideoMetaData
+  frames: IFace[][]
+
+  getFrameData(frame: number): IFace[]
 }
 
-@Module({ dynamic: true, store, name: 'timeline' })
+export interface FrameData {
+  frame: number
+  faces: IFace[]
+}
+
+@Module({ dynamic: true, store, name: 'timeline', namespaced: true })
 class Timeline extends VuexModule implements ITimelineState {
 
-  public meta: VideoMetaData = {
+  public meta: IVideoMetaData = {
     duration: 0,
+    frames: 0,
     width: 0,
     height: 0,
   }
 
-  public frames: Face[][] = []
+  public frames: IFace[][] = []
+
+  public getFrameData(frame: number): IFace[] {
+    console.log('getFrameData', this.frames)
+    return this.frames[frame]
+  }
 
   @Mutation
-  public setMetaData(meta: VideoMetaData) {
+  public setMetaData(meta: IVideoMetaData) {
     this.meta = meta
-    this.frames = [] // clear frames
+    this.frames = new Array(Math.ceil(meta.frames)) // clear frames
+  }
+
+  @Mutation
+  public updateFrame(data: FrameData) {
+    Vue.set(this.frames, data.frame, data.faces)
   }
 }
 

@@ -10,8 +10,8 @@
     )
     svg.overlay(ref="svg" :viewBox="svgViewBox")
       LandmarkEditorFace(
-        v-for="(landmarks, index) in faces"
-        :landmarks="landmarks"
+        v-for="(face, index) in faces"
+        :face="face"
         :key="index"
         :rootSvg="$refs.svg"
       )
@@ -20,7 +20,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { AppModule } from '@/store/modules/app'
-import { TimelineModule } from '@/store/modules/timeline'
+import { TimelineModule, IFace } from '@/store/modules/timeline'
 import * as faceapi from 'face-api.js'
 import LandmarkEditorFace from './LandmarkEditorFace.vue'
 
@@ -35,7 +35,7 @@ export default class LandmarkEditor extends Vue {
   }
 
   private svgViewBox = '0 0 1280 720'
-  private faces: faceapi.FaceLandmarks68[] = []
+  private faces: IFace[] = []
   private options = new faceapi.TinyFaceDetectorOptions()
 
   private get video() {
@@ -60,14 +60,31 @@ export default class LandmarkEditor extends Vue {
     AppModule.setVideoDuration(this.video.duration)
     TimelineModule.setMetaData({
       duration: this.video.duration,
+      frames: AppModule.totalFrame,
       width: this.video.videoWidth,
       height: this.video.videoHeight,
     })
   }
 
   private async onVideoSeeked() {
+    const frame = AppModule.currentFrame
+
+    const cache = TimelineModule.frames[frame]
+    if (cache && cache.length > 0) {
+      console.log('already detected')
+      this.faces = cache
+      return
+    }
     const detections = await faceapi.detectAllFaces(this.video, this.options).withFaceLandmarks()
-    this.faces = detections.map((d) => d.landmarks)
+
+    this.faces = detections.map((d, i) => {
+      return {
+        id: i,
+        rect: d.alignedRect.box,
+        landmarks: d.landmarks.positions,
+      }
+    })
+    TimelineModule.updateFrame({frame, faces: this.faces})
   }
 }
 </script>

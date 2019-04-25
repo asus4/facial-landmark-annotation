@@ -120,7 +120,7 @@ export default class Menu extends Vue {
         const input = this.$refs.input
         input.accept = 'video/*'
         input.click()
-      }
+      },
     })
   }
 

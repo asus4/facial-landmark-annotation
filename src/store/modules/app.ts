@@ -8,7 +8,7 @@ export interface IAppState {
   videoUrl: string
 }
 
-@Module({ dynamic: true, store, name: 'app' })
+@Module({ dynamic: true, store, name: 'app', namespaced: true })
 class App extends VuexModule implements IAppState {
 
   public currentFrame: number = 0
