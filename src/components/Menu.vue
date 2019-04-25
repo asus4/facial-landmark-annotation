@@ -114,9 +114,14 @@ export default class Menu extends Vue {
   }
 
   private loadVideo() {
-    const input = this.$refs.input
-    input.accept = 'video/*'
-    input.click()
+    this.$dialog.confirm({
+      message: 'Are you saved?',
+      onConfirm: () =>  {
+        const input = this.$refs.input
+        input.accept = 'video/*'
+        input.click()
+      }
+    })
   }
 
   private loadJson() {
