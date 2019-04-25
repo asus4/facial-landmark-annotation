@@ -1,6 +1,12 @@
 <template lang="pug">
 .editor.is-full
-  div aaaaaa
+  video.video(
+    ref="video" muted
+    :src="videoUrl"
+    :current-time.prop="currentTime"
+    @loadeddata="onVideoLoaded"
+    @seeked="onVideoSeeked"
+  )
 </template>
 
 <script lang="ts">
@@ -12,17 +18,28 @@ import { AppModule } from '@/store/modules/app'
 })
 export default class LandmarkEditor extends Vue {
 
-  private get count(): number {
-    return AppModule.currentFrame
+  public $refs!: {
+    video: HTMLVideoElement;
   }
 
-  private increment() {
-    AppModule.nextFrame()
+  private get video() {
+    return this.$refs.video
   }
 
-  private decrement() {
-    AppModule.prevFrame()
+  private get videoUrl(): string {
+    return AppModule.videoUrl
   }
 
+  private get currentTime() {
+    return AppModule.currentTime
+  }
+
+  private onVideoLoaded() {
+    AppModule.setVideoDuration(this.video.duration)
+  }
+
+  private onVideoSeeked() {
+    console.log('seeked!', this.video.currentTime)
+  }
 }
 </script>

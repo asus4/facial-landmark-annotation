@@ -3,13 +3,19 @@
   Menu
   LandmarkEditor
   .columns
-    .column.is-one-third
+    .column.is-full
+      input.slider(ref="timeSlider" type="range" value="0" min="0" :max="total" @change="onTimeSliderChange")
+  .columns
+    .column
       // Frame Incrementer
+      span Frame:
       button.button(@click="decrement")
         b-icon(icon="minus")
-      span {{ count }}
+      span &nbsp{{ current }} / {{ total }} &nbsp
       button.button(@click="increment")
         b-icon(icon="plus")
+    .column
+      button.button(@click="autoDetect") Auto Detect
 </template>
 
 <script lang="ts">
@@ -26,8 +32,16 @@ import Menu from '@/components/Menu.vue'
 })
 export default class Home extends Vue {
 
-  private get count(): number {
+  public $refs!: {
+    timeSlider: HTMLInputElement;
+  }
+
+  private get current(): number {
     return AppModule.currentFrame
+  }
+
+  private get total(): number {
+    return AppModule.totalFrame
   }
 
   private increment() {
@@ -38,6 +52,17 @@ export default class Home extends Vue {
     AppModule.prevFrame()
   }
 
+  private onTimeSliderChange(e: Event) {
+    AppModule.setCurrentFrame(this.$refs.timeSlider.valueAsNumber)
+  }
 
+  private autoDetect() {
+    console.log('autodetect')
+  }
 }
 </script>
+
+<style lang="sass" scoped>
+.slider
+  width: 100%
+</style>

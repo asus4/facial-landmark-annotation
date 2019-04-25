@@ -8,6 +8,8 @@ nav.navbar(role="navigation" aria-label="main navigation")
         .navbar-dropdown
           a.navbar-item(v-for="item in items" @click="item.method") {{ item.name }}
             span(v-if="item.keymap") &nbsp({{ item.keymap }})
+  // for file loading
+  input(ref="input" type="file" @change="onLoadFile")
 </template>
 
 <script lang="ts">
@@ -31,6 +33,10 @@ interface MenuFolder {
 })
 export default class Menu extends Vue {
 
+  public $refs!: {
+    input: HTMLInputElement;
+  }
+
   private folders: MenuFolder[] = [
     {
       name: 'File',
@@ -38,7 +44,7 @@ export default class Menu extends Vue {
         {
           name: 'Load Video',
           method: this.loadVideo,
-          keymap: 'ctrl+o'
+          keymap: 'ctrl+o',
         },
         {
           name: 'Load Json',
@@ -49,11 +55,16 @@ export default class Menu extends Vue {
           method: this.saveJson,
           keymap: 'ctrl+s',
         },
-      ]
+      ],
     },
     {
       name: 'Edit',
       items: [
+        {
+          name: 'Undo',
+          method: this.undo,
+          keymap: 'ctrl+z',
+        },
         {
           name: 'Next Frame',
           method: AppModule.nextFrame,
@@ -66,21 +77,26 @@ export default class Menu extends Vue {
         },
       ],
     },
+    {
+      name: 'Help',
+      items: [
+        {
+          name: 'Show Help',
+          method: this.showHelp,
+        },
+      ],
+    },
   ]
-
-  private keymaps: { [id: string]: () => void } = {
-    'ctrl+o': this.loadVideo,
-    'ctrl+s': this.saveJson,
-    '.': this.nextFrame,
-    ',': this.prevFrame,
-  }
 
   private mounted() {
     // Assign all keymaps
     for (const folder of this.folders) {
       for (const item of folder.items) {
         if (item.keymap) {
-          hotkeys(item.keymap, item.method)
+          hotkeys(item.keymap, (e: Event) => {
+            e.preventDefault()
+            item.method()
+          })
         }
       }
     }
@@ -98,7 +114,9 @@ export default class Menu extends Vue {
   }
 
   private loadVideo() {
-    console.log('loadVideo')
+    const input = this.$refs.input
+    input.accept = 'video/*'
+    input.click()
   }
 
   private loadJson() {
@@ -108,5 +126,27 @@ export default class Menu extends Vue {
   private saveJson() {
     console.log('saveJson')
   }
+
+  private undo() {
+    console.log('undo')
+  }
+
+  private showHelp() {
+    console.log('show help')
+  }
+
+  private onLoadFile(e: Event) {
+    const input = this.$refs.input
+    if (!input.files || input.files.length === 0) {
+      return
+    }
+    const file = input.files[0]
+    AppModule.loadVideo(file)
+  }
 }
 </script>
+
+<style lang="sass" scoped>
+input
+  display: none
+</style>
