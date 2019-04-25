@@ -27,8 +27,6 @@ import LandmarkEditor from '@/components/LandmarkEditor.vue'
 import Menu from '@/components/Menu.vue'
 import * as faceapi from 'face-api.js'
 
-console.log(faceapi)
-
 @Component({
   components: {
     LandmarkEditor,
@@ -37,16 +35,17 @@ console.log(faceapi)
 })
 export default class Home extends Vue {
 
-  private isLoading = true
-
   public $refs!: {
     timeSlider: HTMLInputElement;
   }
+
+  private isLoading = true
 
   private async mounted() {
     // TODO put in local
     const modelpath = 'https://justadudewhohacks.github.io/face-api.js/models'
     await faceapi.loadSsdMobilenetv1Model(modelpath)
+    await faceapi.loadFaceLandmarkModel(modelpath)
     this.isLoading = false
   }
 
