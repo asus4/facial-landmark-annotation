@@ -3,6 +3,9 @@ import store from '@/store'
 
 export interface IAppState {
   currentFrame: number
+  duration: number
+  fps: number
+  videoUrl: string
 }
 
 @Module({ dynamic: true, store, name: 'app' })

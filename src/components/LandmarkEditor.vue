@@ -20,6 +20,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { AppModule } from '@/store/modules/app'
+import { TimelineModule } from '@/store/modules/timeline'
 import * as faceapi from 'face-api.js'
 import LandmarkEditorFace from './LandmarkEditorFace.vue'
 
@@ -57,6 +58,11 @@ export default class LandmarkEditor extends Vue {
     this.svgViewBox = `0 0 ${this.video.videoWidth} ${this.video.videoHeight}`
 
     AppModule.setVideoDuration(this.video.duration)
+    TimelineModule.setMetaData({
+      duration: this.video.duration,
+      width: this.video.videoWidth,
+      height: this.video.videoHeight,
+    })
   }
 
   private async onVideoSeeked() {
