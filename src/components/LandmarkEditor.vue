@@ -7,8 +7,8 @@
     @loadeddata="onVideoLoaded"
     @seeked="onVideoSeeked"
   )
-  svg.overlay
-    circle(v-for="{x, y} in landmaks" :cx="x" :cy="y" r="4")
+  svg.overlay(ref="svg" :viewBox="svgViewBox")
+    circle(v-for="{x, y} in landmaks" :cx="x" :cy="y" r="4" draggable="true")
 </template>
 
 <script lang="ts">
@@ -23,8 +23,10 @@ export default class LandmarkEditor extends Vue {
 
   public $refs!: {
     video: HTMLVideoElement;
+    svg: SVGElement
   }
 
+  private svgViewBox = '0 0 1280 720'
   private landmaks: faceapi.IPoint[] = []
 
   private get video() {
@@ -40,16 +42,21 @@ export default class LandmarkEditor extends Vue {
   }
 
   private onVideoLoaded() {
+    this.svgViewBox = `0 0 ${this.video.videoWidth} ${this.video.videoHeight}`
+
     AppModule.setVideoDuration(this.video.duration)
   }
 
   private async onVideoSeeked() {
     const detections = await faceapi.detectAllFaces(this.video).withFaceLandmarks()
     if (detections.length <= 0) {
-      console.log('face not found')
       this.landmaks = []
       return
     }
+    const svg = this.$refs.svg
+    const bbox = svg.getBoundingClientRect()
+    const resized = faceapi.resizeResults(detections, { width: bbox.width, height: bbox.height })
+
     this.landmaks = detections[0].landmarks.positions
   }
 }
@@ -69,6 +76,11 @@ export default class LandmarkEditor extends Vue {
 svg
   circle
     stroke: #00ff00
+    fill: none
+    cursor: grab
     &:hover
+      stroke: none
       fill: #00ff00
+    &:active
+      cursor: grabbing
 </style>
