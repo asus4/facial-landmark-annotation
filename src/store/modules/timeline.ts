@@ -45,11 +45,12 @@ class Timeline extends VuexModule implements ITimelineState {
     return this.frames[frame]
   }
 
-  public get json() {
-    return JSON.stringify({
+  public get jsonBlob(): Blob {
+    const json = JSON.stringify({
       meta: this.meta,
       frames: this.frames,
     })
+    return new Blob([json], { type: 'application/javascript;charset=utf-8' })
   }
 
   @Mutation

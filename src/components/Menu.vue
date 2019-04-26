@@ -14,9 +14,10 @@ nav.navbar(role="navigation" aria-label="main navigation")
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
+import { saveAs } from 'file-saver'
+import hotkeys from 'hotkeys-js'
 import { AppModule } from '@/store/modules/app'
 import { TimelineModule } from '@/store/modules/timeline'
-import hotkeys from 'hotkeys-js'
 
 interface MenuItem {
   name: string,
@@ -130,8 +131,7 @@ export default class Menu extends Vue {
   }
 
   private saveJson() {
-    const json = TimelineModule.json
-    console.log('saveJson', json)
+    saveAs(TimelineModule.jsonBlob, 'landmarks.json')
   }
 
   private undo() {
@@ -150,6 +150,7 @@ export default class Menu extends Vue {
     const file = input.files[0]
     AppModule.loadVideo(file)
   }
+
 }
 </script>
 
