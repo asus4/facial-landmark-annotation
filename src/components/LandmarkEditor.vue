@@ -1,20 +1,28 @@
 <template lang="pug">
-.editor.is-full
-  .scaler(:style="{ width: resolution.width+'px', height: resolution.height+'px' }")
-    video(
-      ref="video" muted
-      :src="videoUrl"
-      :current-time.prop="currentTime"
-      @loadeddata="onVideoLoaded"
-      @seeked="onVideoSeeked"
-    )
-    svg.overlay(ref="svg" :viewBox="svgViewBox")
-      LandmarkEditorFace(
-        v-for="(face, index) in faces"
-        :face="face"
-        :key="index"
-        :rootSvg="$refs.svg"
+.wrapper
+  .editor
+    .scaler(:style="scalerStyle")
+      video(
+        ref="video" muted
+        :src="videoUrl"
+        :current-time.prop="currentTime"
+        @loadeddata="onVideoLoaded"
+        @seeked="onVideoSeeked"
       )
+      svg.overlay(ref="svg" :viewBox="svgViewBox")
+        LandmarkEditorFace(
+          v-for="(face, index) in faces"
+          :face="face"
+          :key="index"
+          :rootSvg="$refs.svg"
+        )
+  .zoom-ui
+    button.button(@click="zoomOut")
+      b-icon(icon="magnify-minus")
+      span z
+    button.button(@click="zoomIn")
+      b-icon(icon="magnify-plus")
+      span x
 </template>
 
 <script lang="ts">
@@ -23,6 +31,7 @@ import { AppModule } from '@/store/modules/app'
 import { TimelineModule, IFace } from '@/store/modules/timeline'
 import * as faceapi from 'face-api.js'
 import LandmarkEditorFace from './LandmarkEditorFace.vue'
+import hotkeys from 'hotkeys-js';
 
 @Component({
   components: { LandmarkEditorFace },
@@ -38,6 +47,16 @@ export default class LandmarkEditor extends Vue {
   private options = new faceapi.TinyFaceDetectorOptions()
   private svgViewBox = '0 0 1280 720'
   private resolution: faceapi.IDimensions = new faceapi.Dimensions(0, 0)
+  private zoom = 1
+
+  private mounted() {
+    hotkeys('z', this.zoomOut)
+    hotkeys('x', this.zoomIn)
+  }
+
+  private destroyed() {
+
+  }
 
   private get video() {
     return this.$refs.video
@@ -49,6 +68,14 @@ export default class LandmarkEditor extends Vue {
 
   private get currentTime() {
     return AppModule.currentTime
+  }
+
+  private get scalerStyle() {
+    return {
+      width: this.resolution.width + 'px',
+      height: this.resolution.height + 'px',
+      transform: `scale(${this.zoom})`,
+    }
   }
 
   private async onVideoLoaded() {
@@ -70,12 +97,20 @@ export default class LandmarkEditor extends Vue {
     await this.detectFace()
   }
 
+  private zoomIn() {
+    this.zoom *= 3 / 2
+  }
+
+  private zoomOut() {
+    this.zoom *= 2 / 3
+  }
+
   private async detectFace() {
     const frame = AppModule.currentFrame
 
     const cache = TimelineModule.frames[frame]
     if (cache && cache.length > 0) {
-      console.log('already detected')
+      console.log('use cache')
       this.faces = cache
       return
     }
@@ -94,11 +129,18 @@ export default class LandmarkEditor extends Vue {
 </script>
 
 <style lang="sass" scoped>
+.wrapper
+  position: relative
+
 .editor
   position: relative
+  width: 100vh
+  height: 70vh
+  overflow: auto
 
 .scaler
   position: relative
+  transform-origin: top left
 
 .overlay
   position: absolute
@@ -106,4 +148,9 @@ export default class LandmarkEditor extends Vue {
   left: 0
   width: 100%
   height: 100%
+
+.zoom-ui
+  position: absolute
+  bottom: 0
+  left: 0
 </style>
