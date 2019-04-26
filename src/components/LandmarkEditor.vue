@@ -17,12 +17,12 @@
           :rootSvg="$refs.svg"
         )
   .zoom-ui
-    button.button(@click="zoomOut")
-      b-icon(icon="magnify-minus")
-      span z
-    button.button(@click="zoomIn")
-      b-icon(icon="magnify-plus")
-      span x
+    b-tooltip(label="Zoom Out (z)" type="is-light" position="is-right")
+      button.button(@click="zoomOut")
+        b-icon(icon="magnify-minus")
+    b-tooltip(label="Zoom In (x)" type="is-light" position="is-right")
+      button.button(@click="zoomIn")
+        b-icon(icon="magnify-plus")
 </template>
 
 <script lang="ts">
@@ -31,7 +31,7 @@ import { AppModule } from '@/store/modules/app'
 import { TimelineModule, IFace } from '@/store/modules/timeline'
 import * as faceapi from 'face-api.js'
 import LandmarkEditorFace from './LandmarkEditorFace.vue'
-import hotkeys from 'hotkeys-js';
+import hotkeys from 'hotkeys-js'
 
 @Component({
   components: { LandmarkEditorFace },
@@ -55,7 +55,8 @@ export default class LandmarkEditor extends Vue {
   }
 
   private destroyed() {
-
+    hotkeys.unbind('z')
+    hotkeys.unbind('x')
   }
 
   private get video() {

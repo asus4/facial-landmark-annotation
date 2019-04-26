@@ -3,17 +3,15 @@
   .columns
     .column.is-full
       input.slider(ref="timeSlider" type="range" value="0" min="0" :max="total" @change="onTimeSliderChange")
-  .columns
-    .column
-      // Frame Incrementer
-      span Frame:
-      button.button(@click="decrement")
-        b-icon(icon="minus")
-      span &nbsp{{ current }} / {{ total }} &nbsp
-      button.button(@click="increment")
-        b-icon(icon="plus")
-    .column
-      button.button(@click="autoDetect") Auto Detect
+  .cotainer
+    b-field(label="Frame")
+      b-numberinput(controls-position="compact"
+        v-model="current"
+        min="0" :max="total"
+      )
+    .columns
+      .column
+        button.button(@click="autoDetect") Auto Detect
 </template>
 
 <script lang="ts">
@@ -30,12 +28,16 @@ export default class Timeline extends Vue {
     timeSlider: HTMLInputElement;
   }
 
-   private get current(): number {
+  private get current(): number {
     return AppModule.currentFrame
   }
 
+  private set current(n: number) {
+    AppModule.setCurrentFrame(n)
+  }
+
   private get total(): number {
-    return AppModule.totalFrame
+    return Math.ceil(AppModule.totalFrame)
   }
 
   private increment() {
