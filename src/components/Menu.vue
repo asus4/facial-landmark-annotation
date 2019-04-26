@@ -15,6 +15,7 @@ nav.navbar(role="navigation" aria-label="main navigation")
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { AppModule } from '@/store/modules/app'
+import { TimelineModule } from '@/store/modules/timeline'
 import hotkeys from 'hotkeys-js'
 
 interface MenuItem {
@@ -129,7 +130,8 @@ export default class Menu extends Vue {
   }
 
   private saveJson() {
-    console.log('saveJson')
+    const json = TimelineModule.json
+    console.log('saveJson', json)
   }
 
   private undo() {

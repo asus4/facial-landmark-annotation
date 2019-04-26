@@ -45,6 +45,13 @@ class Timeline extends VuexModule implements ITimelineState {
     return this.frames[frame]
   }
 
+  public get json() {
+    return JSON.stringify({
+      meta: this.meta,
+      frames: this.frames,
+    })
+  }
+
   @Mutation
   public setMetaData(meta: IVideoMetaData) {
     this.meta = meta
@@ -55,6 +62,7 @@ class Timeline extends VuexModule implements ITimelineState {
   public updateFrame(data: FrameData) {
     Vue.set(this.frames, data.frame, data.faces)
   }
+
 }
 
 export const TimelineModule = getModule(Timeline)

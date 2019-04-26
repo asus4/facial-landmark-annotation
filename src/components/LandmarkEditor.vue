@@ -32,6 +32,7 @@ import { TimelineModule, IFace } from '@/store/modules/timeline'
 import * as faceapi from 'face-api.js'
 import LandmarkEditorFace from './LandmarkEditorFace.vue'
 import hotkeys from 'hotkeys-js'
+import { toIRect, toIPoint } from '@/utils/faceapi'
 
 @Component({
   components: { LandmarkEditorFace },
@@ -110,7 +111,7 @@ export default class LandmarkEditor extends Vue {
     const frame = AppModule.currentFrame
 
     const cache = TimelineModule.frames[frame]
-    if (cache && cache.length > 0) {
+    if (cache) {
       console.log('use cache')
       this.faces = cache
       return
@@ -120,8 +121,8 @@ export default class LandmarkEditor extends Vue {
     this.faces = detections.map((d, i) => {
       return {
         id: i,
-        rect: d.alignedRect.box,
-        landmarks: d.landmarks.positions,
+        rect: toIRect(d.alignedRect.box),
+        landmarks: d.landmarks.positions.map((p) => toIPoint(p)),
       }
     })
     TimelineModule.updateFrame({frame, faces: this.faces})
