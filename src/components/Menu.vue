@@ -142,11 +142,11 @@ export default class Menu extends Vue {
   }
 
   private undo() {
-    console.log('undo')
+    console.log('todo undo')
   }
 
   private showHelp() {
-    console.log('show help')
+    console.log('todo show help')
   }
 
   private onLoadFile(e: Event) {

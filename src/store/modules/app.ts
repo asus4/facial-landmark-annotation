@@ -15,6 +15,7 @@ class App extends VuexModule implements IAppState {
   public duration: number = 0
   public fps: number = 30
   public videoUrl: string = ''
+  public isAutoProcess: boolean = false
 
   public get totalFrame(): number {
     return this.fps * this.duration
@@ -53,6 +54,18 @@ class App extends VuexModule implements IAppState {
   @Mutation
   public setVideoDuration(duration: number) {
     this.duration = duration
+  }
+
+  @Mutation
+  public startAutoProcess() {
+    console.log('startAutoProcess')
+    this.isAutoProcess = true
+  }
+
+  @Mutation
+  public stopAutoProcess() {
+    console.log('stopAutoProcess')
+    this.isAutoProcess = false
   }
 }
 

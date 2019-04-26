@@ -13,7 +13,8 @@
         )
     .columns
       .column
-        button.button(@click="autoDetect") Auto Detect
+        button.button(@click="startAutoProcess") Start Auto
+  b-loading(:active.sync="isAutoProcess" canCancel @onCancel="stopAutoProcess")
 </template>
 
 <script lang="ts">
@@ -30,16 +31,19 @@ export default class Controls extends Vue {
     timeSlider: HTMLInputElement;
   }
 
-  private get current(): number {
-    return AppModule.currentFrame
-  }
+  private get current(): number { return AppModule.currentFrame }
+  private set current(n: number) { AppModule.setCurrentFrame(n) }
 
-  private set current(n: number) {
-    AppModule.setCurrentFrame(n)
-  }
+  private get total(): number { return Math.ceil(AppModule.totalFrame) }
 
-  private get total(): number {
-    return Math.ceil(AppModule.totalFrame)
+  private get isAutoProcess() { return AppModule.isAutoProcess }
+  private set isAutoProcess(value: boolean) {
+    console.log('is auto pora ', value)
+    if (value) {
+      AppModule.startAutoProcess()
+    } else {
+      AppModule.stopAutoProcess()
+    }
   }
 
   private increment() {
@@ -54,8 +58,12 @@ export default class Controls extends Vue {
     AppModule.setCurrentFrame(this.$refs.timeSlider.valueAsNumber)
   }
 
-  private autoDetect() {
-    console.log('autodetect')
+  private startAutoProcess() {
+    this.isAutoProcess = true
+  }
+
+  private stopAutoProcess() {
+    this.isAutoProcess = false
   }
 
 }

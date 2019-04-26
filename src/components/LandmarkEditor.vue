@@ -26,7 +26,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue, Watch } from 'vue-property-decorator'
 import { AppModule } from '@/store/modules/app'
 import { TimelineModule, IFace } from '@/store/modules/timeline'
 import * as faceapi from 'face-api.js'
@@ -82,6 +82,18 @@ export default class LandmarkEditor extends Vue {
     }
   }
 
+  private get isAutoProcess(): boolean {
+    return AppModule.isAutoProcess
+  }
+
+  @Watch('isAutoProcess')
+  private onChildChanged(value: boolean) {
+    console.log(`auto progress changed ${value}`)
+    if (value) {
+      AppModule.setCurrentFrame(0)
+    }
+  }
+
   private async onVideoLoaded() {
     this.svgViewBox = `0 0 ${this.video.videoWidth} ${this.video.videoHeight}`
     this.resolution = new faceapi.Dimensions(this.video.videoWidth, this.video.videoHeight)
@@ -99,6 +111,9 @@ export default class LandmarkEditor extends Vue {
 
   private async onVideoSeeked() {
     await this.detectFace()
+    if (this.isAutoProcess) {
+      AppModule.nextFrame()
+    }
   }
 
   private zoomIn() {

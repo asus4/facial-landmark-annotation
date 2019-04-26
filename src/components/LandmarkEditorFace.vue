@@ -15,7 +15,7 @@ g
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator'
+import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
 import { AppModule } from '@/store/modules/app'
 import { TimelineModule, IFace } from '@/store/modules/timeline'
 import * as faceapi from 'face-api.js'
