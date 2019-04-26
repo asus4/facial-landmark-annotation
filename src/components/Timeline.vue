@@ -5,10 +5,11 @@
       input.slider(ref="timeSlider" type="range" value="0" min="0" :max="total" @change="onTimeSliderChange")
   .cotainer
     b-field(label="Frame")
-      b-numberinput(controls-position="compact"
-        v-model="current"
-        min="0" :max="total"
-      )
+      b-tooltip(label="Prev: (,) Next: (.)" type="is-light")
+        b-numberinput(controls-position="compact"
+          v-model="current"
+          min="0" :max="total"
+        )
     .columns
       .column
         button.button(@click="autoDetect") Auto Detect
