@@ -1,6 +1,6 @@
 <template lang="pug">
 .editor.is-full
-  .container
+  .scaler(:style="{ width: resolution.width+'px', height: resolution.height+'px' }")
     video(
       ref="video" muted
       :src="videoUrl"
@@ -34,9 +34,10 @@ export default class LandmarkEditor extends Vue {
     svg: SVGElement
   }
 
-  private svgViewBox = '0 0 1280 720'
   private faces: IFace[] = []
   private options = new faceapi.TinyFaceDetectorOptions()
+  private svgViewBox = '0 0 1280 720'
+  private resolution: faceapi.IDimensions = new faceapi.Dimensions(0, 0)
 
   private get video() {
     return this.$refs.video
@@ -50,12 +51,9 @@ export default class LandmarkEditor extends Vue {
     return AppModule.currentTime
   }
 
-  private get svgPoint(): SVGPoint {
-    return (this.$refs.svg as any).createSVGPoint()
-  }
-
-  private onVideoLoaded() {
+  private async onVideoLoaded() {
     this.svgViewBox = `0 0 ${this.video.videoWidth} ${this.video.videoHeight}`
+    this.resolution = new faceapi.Dimensions(this.video.videoWidth, this.video.videoHeight)
 
     AppModule.setVideoDuration(this.video.duration)
     TimelineModule.setMetaData({
@@ -64,9 +62,15 @@ export default class LandmarkEditor extends Vue {
       width: this.video.videoWidth,
       height: this.video.videoHeight,
     })
+
+    await this.detectFace()
   }
 
   private async onVideoSeeked() {
+    await this.detectFace()
+  }
+
+  private async detectFace() {
     const frame = AppModule.currentFrame
 
     const cache = TimelineModule.frames[frame]
@@ -91,6 +95,9 @@ export default class LandmarkEditor extends Vue {
 
 <style lang="sass" scoped>
 .editor
+  position: relative
+
+.scaler
   position: relative
 
 .overlay
