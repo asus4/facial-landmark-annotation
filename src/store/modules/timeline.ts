@@ -2,7 +2,6 @@ import Vue from 'vue'
 import { VuexModule, Module, Mutation, Action, getModule } from 'vuex-module-decorators'
 import store from '@/store'
 import * as faceapi from 'face-api.js'
-import { AppModule } from './app'
 
 export interface IVideoMetaData {
   duration: number,

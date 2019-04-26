@@ -1,6 +1,8 @@
 <template lang="pug">
 g
-  path(:d="allPath")
+  path.svg-stroke(:d="allPath")
+  rect.svg-stroke(:x="rect.x" :y="rect.y" :width="rect.width" :height="rect.height")
+  text(:x="rect.x" :y="rect.y - 2") ID: {{ face.id }}
   circle(
     v-for="(p, index) in positions"
     r="4" draggable="true"
@@ -38,6 +40,10 @@ export default class LandmarkEditorFace extends Vue {
 
   private get positions(): faceapi.IPoint[] {
     return this.face.landmarks
+  }
+
+  private get rect(): faceapi.IRect {
+    return this.face.rect
   }
 
   private onMouseDown(e: MouseEvent, index: number) {
@@ -95,18 +101,25 @@ export default class LandmarkEditorFace extends Vue {
 </script>
 
 <style lang="sass" scoped>
+
+$color: #00ff00
+
 circle
-  stroke: #00ff00
+  stroke: $color
   fill: none
   cursor: grab
   &:hover
     stroke: none
-    fill: #00ff00
+    fill: $color
   &:active
     cursor: grabbing
 
-path
-  stroke: #00ff00
+text
+  font: 12px sans-serif
+  fill: $color
+
+.svg-stroke
+  stroke: $color
   stroke-width: 1
   fill: none
 </style>
