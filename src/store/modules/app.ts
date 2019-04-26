@@ -1,5 +1,6 @@
 import { VuexModule, Module, Mutation, Action, getModule } from 'vuex-module-decorators'
 import store from '@/store'
+import { TimelineModule } from './timeline'
 
 export interface IAppState {
   currentFrame: number
@@ -44,6 +45,19 @@ class App extends VuexModule implements IAppState {
       return
     }
     this.currentFrame = value
+  }
+
+  @Mutation
+  public nextBlankFrame() {
+    const frame = TimelineModule.firstBlankFrame
+    if (frame < 0) {
+      this.isAutoProcess = false
+      return
+    }
+    if (this.totalFrame < frame) {
+      return
+    }
+    this.currentFrame = frame
   }
 
   @Mutation

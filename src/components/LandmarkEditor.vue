@@ -88,9 +88,8 @@ export default class LandmarkEditor extends Vue {
 
   @Watch('isAutoProcess')
   private onChildChanged(value: boolean) {
-    console.log(`auto progress changed ${value}`)
     if (value) {
-      AppModule.setCurrentFrame(0)
+      AppModule.nextBlankFrame()
     }
   }
 
@@ -112,7 +111,7 @@ export default class LandmarkEditor extends Vue {
   private async onVideoSeeked() {
     await this.detectFace()
     if (this.isAutoProcess) {
-      AppModule.nextFrame()
+      AppModule.nextBlankFrame()
     }
   }
 

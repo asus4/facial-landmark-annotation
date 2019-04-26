@@ -40,6 +40,15 @@ class Timeline extends VuexModule implements ITimelineState {
 
   public frames: IFace[][] = []
 
+  public get firstBlankFrame(): number {
+    for (let i = 0; i < this.frames.length; i++) {
+      if (!this.frames[i]) {
+        return i
+      }
+    }
+    return -1
+  }
+
   public get jsonBlob(): Blob {
     const json = JSON.stringify({
       meta: this.meta,
