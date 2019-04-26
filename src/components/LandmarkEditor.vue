@@ -134,7 +134,7 @@ export default class LandmarkEditor extends Vue {
 
 .editor
   position: relative
-  width: 100vh
+  width: 100%
   height: 70vh
   overflow: auto
 
