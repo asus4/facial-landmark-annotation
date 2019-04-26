@@ -1,5 +1,6 @@
+
 <template lang="pug">
-.timeline
+.controls
   .columns
     .column.is-full
       input.slider(ref="timeSlider" type="range" value="0" min="0" :max="total" @change="onTimeSliderChange")
@@ -23,7 +24,7 @@ import * as faceapi from 'face-api.js'
 @Component({
   components: {},
 })
-export default class Timeline extends Vue {
+export default class Controls extends Vue {
 
   public $refs!: {
     timeSlider: HTMLInputElement;
@@ -61,7 +62,7 @@ export default class Timeline extends Vue {
 </script>
 
 <style lang="sass" scoped>
-.timeline
+.controls
   width: 100%
 
 .slider

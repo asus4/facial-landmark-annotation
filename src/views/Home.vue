@@ -2,24 +2,24 @@
 .home
   Menu
   LandmarkEditor
-  Timeline
+  Controls
   b-loading(:active.sync="isLoading")
 
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
+import * as faceapi from 'face-api.js'
 import { AppModule } from '@/store/modules/app'
+import Controls from '@/components/Controls.vue'
 import LandmarkEditor from '@/components/LandmarkEditor.vue'
 import Menu from '@/components/Menu.vue'
-import Timeline from '@/components/Timeline.vue'
-import * as faceapi from 'face-api.js'
 
 @Component({
   components: {
+    Controls,
     LandmarkEditor,
     Menu,
-    Timeline,
   },
 })
 export default class Home extends Vue {
