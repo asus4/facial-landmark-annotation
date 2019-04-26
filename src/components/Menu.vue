@@ -127,7 +127,14 @@ export default class Menu extends Vue {
   }
 
   private loadJson() {
-    console.log('loadJson')
+    this.$dialog.confirm({
+      message: 'current landmarks will be overwritten.',
+      onConfirm: () =>  {
+        const input = this.$refs.input
+        input.accept = 'application/json'
+        input.click()
+      },
+    })
   }
 
   private saveJson() {
@@ -148,7 +155,21 @@ export default class Menu extends Vue {
       return
     }
     const file = input.files[0]
-    AppModule.loadVideo(file)
+    if (file.type.startsWith('video')) {
+      AppModule.loadVideo(file)
+    } else if (file.type.startsWith('application/json')) {
+      TimelineModule.loadJsonFile(file).catch((err) => {
+        console.warn(err)
+        this.showNotSupported()
+      })
+    } else {
+      console.log('unknown file', file)
+      this.showNotSupported()
+    }
+  }
+
+  private showNotSupported() {
+    this.$dialog.alert('This file is not supported.')
   }
 
 }

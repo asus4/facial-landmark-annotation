@@ -45,6 +45,8 @@ export default class LandmarkEditor extends Vue {
   }
 
   private faces: IFace[] = []
+
+  // TODO: change landmark options from UI
   private options = new faceapi.TinyFaceDetectorOptions()
   private svgViewBox = '0 0 1280 720'
   private resolution: faceapi.IDimensions = new faceapi.Dimensions(0, 0)

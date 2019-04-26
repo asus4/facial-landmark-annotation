@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { VuexModule, Module, Mutation, Action, getModule } from 'vuex-module-decorators'
+import { VuexModule, Module, Mutation, MutationAction, getModule } from 'vuex-module-decorators'
 import store from '@/store'
 import * as faceapi from 'face-api.js'
 
@@ -19,13 +19,23 @@ export interface IFace {
 export interface ITimelineState {
   meta: IVideoMetaData
   frames: IFace[][]
-
-  getFrameData(frame: number): IFace[]
 }
 
 export interface FrameData {
   frame: number
   faces: IFace[]
+}
+
+const loadAsTextAsync = async (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload =  (e) => {
+      console.log(e.loaded)
+      resolve(reader.result as string)
+    }
+    reader.onerror = reject
+    reader.readAsText(file)
+  })
 }
 
 @Module({ dynamic: true, store, name: 'timeline', namespaced: true })
@@ -40,17 +50,12 @@ class Timeline extends VuexModule implements ITimelineState {
 
   public frames: IFace[][] = []
 
-  public getFrameData(frame: number): IFace[] {
-    console.log('getFrameData', this.frames)
-    return this.frames[frame]
-  }
-
   public get jsonBlob(): Blob {
     const json = JSON.stringify({
       meta: this.meta,
       frames: this.frames,
     })
-    return new Blob([json], { type: 'application/javascript;charset=utf-8' })
+    return new Blob([json], { type: 'application/json;charset=utf-8' })
   }
 
   @Mutation
@@ -63,6 +68,13 @@ class Timeline extends VuexModule implements ITimelineState {
   public updateFrame(data: FrameData) {
     Vue.set(this.frames, data.frame, data.faces)
   }
+
+  @MutationAction({ mutate: ['meta', 'frames' ]})
+  public async loadJsonFile(file: File): Promise<{ meta: IVideoMetaData; frames: IFace[][]; }> {
+    const json = await loadAsTextAsync(file)
+    return JSON.parse(json)
+  }
+
 
 }
 
