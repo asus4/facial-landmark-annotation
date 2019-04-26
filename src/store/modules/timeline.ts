@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import { VuexModule, Module, Mutation, MutationAction, getModule } from 'vuex-module-decorators'
-import store from '@/store'
 import * as faceapi from 'face-api.js'
+import store from '@/store'
+import { loadAsText } from '@/utils/file'
+
 
 export interface IVideoMetaData {
   duration: number,
@@ -24,18 +26,6 @@ export interface ITimelineState {
 export interface FrameData {
   frame: number
   faces: IFace[]
-}
-
-const loadAsTextAsync = async (file: File): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.onload =  (e) => {
-      console.log(e.loaded)
-      resolve(reader.result as string)
-    }
-    reader.onerror = reject
-    reader.readAsText(file)
-  })
 }
 
 @Module({ dynamic: true, store, name: 'timeline', namespaced: true })
@@ -71,10 +61,9 @@ class Timeline extends VuexModule implements ITimelineState {
 
   @MutationAction({ mutate: ['meta', 'frames' ]})
   public async loadJsonFile(file: File): Promise<{ meta: IVideoMetaData; frames: IFace[][]; }> {
-    const json = await loadAsTextAsync(file)
+    const json = await loadAsText(file)
     return JSON.parse(json)
   }
-
 
 }
 

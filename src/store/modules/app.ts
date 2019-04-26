@@ -58,13 +58,11 @@ class App extends VuexModule implements IAppState {
 
   @Mutation
   public startAutoProcess() {
-    console.log('startAutoProcess')
     this.isAutoProcess = true
   }
 
   @Mutation
   public stopAutoProcess() {
-    console.log('stopAutoProcess')
     this.isAutoProcess = false
   }
 }

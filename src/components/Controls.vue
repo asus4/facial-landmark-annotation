@@ -38,20 +38,11 @@ export default class Controls extends Vue {
 
   private get isAutoProcess() { return AppModule.isAutoProcess }
   private set isAutoProcess(value: boolean) {
-    console.log('is auto pora ', value)
     if (value) {
       AppModule.startAutoProcess()
     } else {
       AppModule.stopAutoProcess()
     }
-  }
-
-  private increment() {
-    AppModule.nextFrame()
-  }
-
-  private decrement() {
-    AppModule.prevFrame()
   }
 
   private onTimeSliderChange(e: Event) {
