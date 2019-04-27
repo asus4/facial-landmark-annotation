@@ -138,6 +138,8 @@ export default class Menu extends Vue {
   }
 
   private saveJson() {
+    // reduce json size before save
+    TimelineModule.reduceDataSize()
     saveAs(TimelineModule.jsonBlob, 'landmarks.json')
   }
 
