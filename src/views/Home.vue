@@ -5,6 +5,7 @@
     LandmarkEditor.landmark-editor
     DetailTable.detail-table
   Controls
+  Timeline
   b-loading(:active.sync="isLoading")
 
 </template>
@@ -17,6 +18,7 @@ import Controls from '@/components/Controls.vue'
 import DetailTable from '@/components/DetailTable.vue'
 import LandmarkEditor from '@/components/LandmarkEditor.vue'
 import Menu from '@/components/Menu.vue'
+import Timeline from '@/components/Timeline.vue'
 
 @Component({
   components: {
@@ -24,6 +26,7 @@ import Menu from '@/components/Menu.vue'
     DetailTable,
     LandmarkEditor,
     Menu,
+    Timeline,
   },
 })
 export default class Home extends Vue {
