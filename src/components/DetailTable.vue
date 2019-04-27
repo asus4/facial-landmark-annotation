@@ -39,9 +39,12 @@ export default class DetailTable extends Vue {
   private draggingRow!: IFace
   private draggingRowIndex = -1
 
-  private get currentData() {
+  private get currentData(): IFace[] {
     const frame = TimelineModule.frames[AppModule.currentFrame]
-    return frame
+    if (frame) {
+      return frame
+    }
+    return []
   }
 
   private dragstart(payload: Payload) {
