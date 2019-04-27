@@ -32,8 +32,8 @@ export default class DetailTable extends Vue {
     { field: 'id', label: 'ID', width: '40', numeric: true },
     { field: 'rect.x', label: 'X', width: '40', numeric: true },
     { field: 'rect.y', label: 'Y', width: '40', numeric: true },
-    { field: 'rect.width', label: 'Width', width: '40', numeric: true },
-    { field: 'rect.height', label: 'Height', width: '40', numeric: true },
+    { field: 'rect.width', label: 'W', width: '40', numeric: true },
+    { field: 'rect.height', label: 'H', width: '40', numeric: true },
   ]
 
   private draggingRow!: IFace

@@ -44,7 +44,7 @@ export default class Home extends Vue {
 
 <style lang="sass" scoped>
 
-$tableWidth: 300px
+$tableWidth: 250px
 
 .editor
   position: relative
