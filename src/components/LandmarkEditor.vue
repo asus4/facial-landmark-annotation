@@ -87,8 +87,9 @@ export default class LandmarkEditor extends Vue {
   }
 
   @Watch('isAutoProcess')
-  private onChildChanged(value: boolean) {
+  private onAutoProcessChanged(value: boolean) {
     if (value) {
+      // Start from next blank frame
       AppModule.nextBlankFrame()
     }
   }
@@ -111,7 +112,7 @@ export default class LandmarkEditor extends Vue {
   private async onVideoSeeked() {
     await this.detectFace()
     if (this.isAutoProcess) {
-      AppModule.nextBlankFrame()
+      AppModule.nextFrame()
     }
   }
 
