@@ -1,19 +1,20 @@
 
 <template lang="pug">
-.controls
+.controls.cotainer
   .columns
-    .column.is-full
-      input.slider(ref="timeSlider" type="range" value="0" min="0" :max="total" @change="onTimeSliderChange")
-  .cotainer
-    b-field(label="Frame")
+    b-field.column(label="Frame:")
       b-tooltip(label="Prev: (,) Next: (.)" type="is-light")
         b-numberinput(controls-position="compact"
           v-model="current"
           min="0" :max="total"
         )
-    .columns
-      .column
-        button.button(@click="startAutoProcess") Start Auto
+    b-field.column(label="Commands:")
+      .columns
+        .column
+          button.button(@click="startAutoProcess") Start Auto
+        //- .column
+          button.button(@click="startAutoProcess") Start Auto
+  input.slider(ref="timeSlider" type="range" value="0" min="0" :max="total" @change="onTimeSliderChange")
   b-loading(:active.sync="isAutoProcess" canCancel @onCancel="stopAutoProcess")
 </template>
 
