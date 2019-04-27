@@ -13,7 +13,7 @@
         .column
           button.button(@click="startAutoProcess") Start Auto
         //- .column
-          button.button(@click="startAutoProcess") Start Auto
+          button.button(@click="startAutoProcess") Copy Prev
   input.slider(ref="timeSlider" type="range" value="0" min="0" :max="total" @change="onTimeSliderChange")
   b-loading(:active.sync="isAutoProcess" canCancel @onCancel="stopAutoProcess")
 </template>

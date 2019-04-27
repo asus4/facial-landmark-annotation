@@ -32,6 +32,19 @@ const roundTo2Decimal = (n: number) => {
   return Math.round(n * 100) / 100
 }
 
+const roundFaceDecimal = (face: IFace) => {
+  // rect
+  face.rect.x = roundTo2Decimal(face.rect.x)
+  face.rect.y = roundTo2Decimal(face.rect.y)
+  face.rect.width = roundTo2Decimal(face.rect.width)
+  face.rect.height = roundTo2Decimal(face.rect.height)
+  // points
+  face.landmarks.forEach((p) => {
+    p.x = roundTo2Decimal(p.x)
+    p.y = roundTo2Decimal(p.y)
+  })
+}
+
 @Module({ dynamic: true, store, name: 'timeline', namespaced: true })
 class Timeline extends VuexModule implements ITimelineState {
 
@@ -66,16 +79,7 @@ class Timeline extends VuexModule implements ITimelineState {
     this.frames.forEach((frame) => {
       if (frame) {
         frame.forEach((face) => {
-          // rect
-          face.rect.x = roundTo2Decimal(face.rect.x)
-          face.rect.y = roundTo2Decimal(face.rect.y)
-          face.rect.width = roundTo2Decimal(face.rect.width)
-          face.rect.height = roundTo2Decimal(face.rect.height)
-          // points
-          face.landmarks.forEach((p) => {
-            p.x = roundTo2Decimal(p.x)
-            p.y = roundTo2Decimal(p.y)
-          })
+          roundFaceDecimal(face)
         })
       }
     })
@@ -89,6 +93,9 @@ class Timeline extends VuexModule implements ITimelineState {
 
   @Mutation
   public updateFrame(data: FrameData) {
+    data.faces.forEach((face) => {
+      roundFaceDecimal(face)
+    })
     Vue.set(this.frames, data.frame, data.faces)
   }
 
