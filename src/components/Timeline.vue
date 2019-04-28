@@ -1,8 +1,19 @@
 
 <template lang="pug">
 .timeline
-  h1 timeline
-  input.slider(ref="timeSlider" type="range" value="0" min="0" :max="total" @change="onTimeSliderChange")
+  svg.scroller(:viewBox="svgViewBox" :style="svgStyle")
+    line.current-position(
+      :x1="current * (frameWidth + 1)"
+      y1="0"
+      :x2="current * (frameWidth + 1)"
+      :y2="frameHeight"
+    )
+    g(
+      v-for="(faces, index) in frames"
+      :transform="`translate(${getPosX(index)}, 0)`"
+      @click="() => onFrameClick(index)"
+    )
+      rect.frame(x="0" y="0" :width="frameWidth - 1" :height="frameHeight")
 </template>
 
 <script lang="ts">
@@ -26,22 +37,49 @@ export default class Timeline extends Vue {
     timeSlider: HTMLInputElement;
   }
 
+  private frameWidth = 5
+  private frameHeight = 15
+
   private get current(): number { return AppModule.currentFrame }
   private set current(n: number) { AppModule.setCurrentFrame(n) }
 
   private get total(): number { return Math.ceil(AppModule.totalFrame) }
 
-  private onTimeSliderChange(e: Event) {
-    AppModule.setCurrentFrame(this.$refs.timeSlider.valueAsNumber)
+  private get frames(): IFace[][] { return TimelineModule.frames }
+
+  private get svgViewBox(): string { return `0 0 ${this.total * (this.frameWidth + 1)} ${this.frameHeight}` }
+  private get svgStyle() {
+    return {
+      width: (this.total * (this.frameWidth + 1)) + 'px',
+      height: this.frameHeight + 20 + 'px',
+    }
+  }
+
+  private getPosX(i: number) {
+    return i * this.frameWidth
+  }
+
+  private onFrameClick(index: number) {
+    AppModule.setCurrentFrame(index)
   }
 }
 </script>
 
 <style lang="sass" scoped>
+
+$color: #8c67ef
+
 .timeline
   position: relative
-.slider
   width: 100%
+  overflow-x: scroll
 
+.current-position
+  stroke: #ff0000
+
+.frame
+  fill: $color
+  &:hover
+    opacity: 0.5
 
 </style>
