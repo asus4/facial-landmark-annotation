@@ -14,6 +14,7 @@ nav.navbar(role="navigation" aria-label="main navigation")
             ) &nbsp ({{ item.keymap.join('+') }})
   // for file loading
   input(ref="input" type="file" @change="onLoadFile")
+
 </template>
 
 <script lang="ts">
@@ -21,6 +22,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import { saveAs } from 'file-saver'
 import { AppModule } from '@/store/modules/app'
 import { TimelineModule } from '@/store/modules/timeline'
+import HelpModal from '@/components/HelpModal.vue'
 
 interface MenuItem {
   name: string,
@@ -34,7 +36,7 @@ interface MenuFolder {
 }
 
 @Component({
-  components: {},
+  components: { HelpModal },
 })
 export default class Menu extends Vue {
 
@@ -88,6 +90,7 @@ export default class Menu extends Vue {
         {
           name: 'Show Help',
           method: this.showHelp,
+          keymap: ['shift', '?'],
         },
       ],
     },
@@ -126,7 +129,11 @@ export default class Menu extends Vue {
   }
 
   private showHelp() {
-    console.log('todo show help')
+    this.$modal.open({
+        parent: this,
+        component: HelpModal,
+        hasModalCard: true,
+    })
   }
 
   private onLoadFile(e: Event) {
