@@ -27,9 +27,17 @@ class App extends VuexModule implements IAppState {
     return this.currentFrame / this.fps
   }
 
+  public get canCopy(): boolean {
+    return this.selectedFace !== null
+  }
+
   @Mutation
   public nextFrame() {
-      this.currentFrame++
+    if (this.totalFrame <= this.currentFrame) {
+      return
+    }
+    this.currentFrame++
+    this.selectedFace = null
   }
 
   @Mutation
@@ -38,6 +46,7 @@ class App extends VuexModule implements IAppState {
       return
     }
     this.currentFrame--
+    this.selectedFace = null
   }
 
   @Mutation
@@ -46,6 +55,7 @@ class App extends VuexModule implements IAppState {
       return
     }
     this.currentFrame = value
+    this.selectedFace = null
   }
 
   @Mutation

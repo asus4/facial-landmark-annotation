@@ -68,9 +68,14 @@ export default class Menu extends Vue {
       name: 'Edit',
       items: [
         {
-          name: 'Undo',
-          method: this.undo,
-          keymap: ['ctrl', 'z'],
+          name: 'Copy',
+          method: this.copy,
+          keymap: ['ctrl', 'c'],
+        },
+        {
+          name: 'Paste',
+          method: this.paste,
+          keymap: ['ctrl', 'v'],
         },
         {
           name: 'Next Frame',
@@ -124,8 +129,12 @@ export default class Menu extends Vue {
     saveAs(TimelineModule.jsonBlob, 'landmarks.json')
   }
 
-  private undo() {
-    console.log('todo undo')
+  private copy() {
+    console.log('todo copy')
+  }
+
+  private paste() {
+    console.log('todo paste')
   }
 
   private showHelp() {

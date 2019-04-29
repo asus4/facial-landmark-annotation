@@ -109,7 +109,6 @@ export default class LandmarkEditor extends Vue {
 
   private onSvgSelect(e: MouseEvent) {
     if (e.srcElement === this.$refs.svg) {
-      console.log('onSvgSelect', e.target, e.srcElement)
       AppModule.selectFace(null)
     }
   }

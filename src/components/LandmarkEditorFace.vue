@@ -3,7 +3,7 @@ g
   path.svg-stroke(:d="allPath")
   rect.rect.svg-stroke(
     :x="rect.x" :y="rect.y" :width="rect.width" :height="rect.height"
-    @mousedown="() => onRectMouseDown()"
+    @mousedown="onRectMouseDown"
     :style="{ strokeWidth: isSelectedFace ? 3 : 1}"
   )
   text(:x="rect.x" :y="rect.y - 2") ID: {{ face.id }}
