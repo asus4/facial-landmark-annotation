@@ -41,6 +41,18 @@ export default class Home extends Vue {
     await faceapi.loadTinyFaceDetectorModel(modelpath)
     await faceapi.loadFaceLandmarkModel(modelpath)
     this.isLoading = false
+
+    window.addEventListener('beforeunload', this.onBeforeUnload)
+  }
+
+  private destroyed() {
+    window.removeEventListener('beforeunload', this.onBeforeUnload)
+  }
+
+  private onBeforeUnload(e: Event) {
+    // Confirm before leave this page
+    e.preventDefault()
+    e.returnValue = true
   }
 }
 </script>
