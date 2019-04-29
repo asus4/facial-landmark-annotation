@@ -36,7 +36,7 @@ interface MenuFolder {
 }
 
 @Component({
-  components: { HelpModal },
+  components: { },
 })
 export default class Menu extends Vue {
 

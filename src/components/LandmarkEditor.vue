@@ -9,7 +9,9 @@
         @loadeddata="onVideoLoaded"
         @seeked="onVideoSeeked"
       )
-      svg.overlay(ref="svg" :viewBox="svgViewBox")
+      svg.overlay(ref="svg" :viewBox="svgViewBox"
+        @mousedown="onSvgSelect"
+      )
         LandmarkEditorFace(
           v-for="(face, index) in faces"
           :face="face"
@@ -102,6 +104,13 @@ export default class LandmarkEditor extends Vue {
     await this.detectFace()
     if (this.isAutoProcess) {
       AppModule.nextFrame()
+    }
+  }
+
+  private onSvgSelect(e: MouseEvent) {
+    if (e.srcElement === this.$refs.svg) {
+      console.log('onSvgSelect', e.target, e.srcElement)
+      AppModule.selectFace(null)
     }
   }
 

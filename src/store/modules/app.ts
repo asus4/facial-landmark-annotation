@@ -1,6 +1,6 @@
 import { VuexModule, Module, Mutation, Action, getModule } from 'vuex-module-decorators'
 import store from '@/store'
-import { TimelineModule } from './timeline'
+import { TimelineModule, IFace } from './timeline'
 
 export interface IAppState {
   currentFrame: number
@@ -17,6 +17,7 @@ class App extends VuexModule implements IAppState {
   public fps: number = 30
   public videoUrl: string = ''
   public isAutoProcess: boolean = false
+  public selectedFace: IFace | null = null
 
   public get totalFrame(): number {
     return this.fps * this.duration
@@ -78,6 +79,11 @@ class App extends VuexModule implements IAppState {
   @Mutation
   public stopAutoProcess() {
     this.isAutoProcess = false
+  }
+
+  @Mutation
+  public selectFace(face: IFace | null) {
+    this.selectedFace = face
   }
 }
 

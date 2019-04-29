@@ -1,7 +1,11 @@
 <template lang="pug">
 g
   path.svg-stroke(:d="allPath")
-  rect.svg-stroke(:x="rect.x" :y="rect.y" :width="rect.width" :height="rect.height")
+  rect.rect.svg-stroke(
+    :x="rect.x" :y="rect.y" :width="rect.width" :height="rect.height"
+    @mousedown="() => onRectMouseDown()"
+    :style="{ strokeWidth: isSelectedFace ? 3 : 1}"
+  )
   text(:x="rect.x" :y="rect.y - 2") ID: {{ face.id }}
   circle(
     v-for="(p, index) in positions"
@@ -32,7 +36,7 @@ export default class LandmarkEditorFace extends Vue {
   public rootSvg!: SVGGraphicsElement
 
   private svgPoint!: SVGPoint
-  private selected = -1
+  private selectedPoint = -1
 
   private mounted() {
     this.svgPoint = (this.rootSvg as any).createSVGPoint()
@@ -46,21 +50,29 @@ export default class LandmarkEditorFace extends Vue {
     return this.face.rect
   }
 
+  private get isSelectedFace(): boolean {
+    return this.face === AppModule.selectedFace
+  }
+
   private onMouseDown(e: MouseEvent, index: number) {
-    this.selected = index
+    this.selectedPoint = index
   }
 
   private onMouseMove(e: MouseEvent, index: number) {
-    if (this.selected === index) {
+    if (this.selectedPoint === index) {
       this.updatePoint(e, index)
     }
   }
 
   private onMouseUp(e: MouseEvent, index: number) {
-    if (this.selected === index) {
+    if (this.selectedPoint === index) {
       this.updatePoint(e, index)
     }
-    this.selected = -1
+    this.selectedPoint = -1
+  }
+
+  private onRectMouseDown() {
+    AppModule.selectFace(this.face)
   }
 
   private updatePoint(e: MouseEvent, index: number) {
@@ -122,4 +134,8 @@ text
   stroke: $color
   stroke-width: 1
   fill: none
+
+.rect
+  fill: rgba(0, 0, 0, 0)
+
 </style>
