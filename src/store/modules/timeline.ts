@@ -1,32 +1,15 @@
 import Vue from 'vue'
 import { VuexModule, Module, Mutation, MutationAction, getModule } from 'vuex-module-decorators'
-import * as faceapi from 'face-api.js'
 import store from '@/store'
 import { loadAsText } from '@/utils/file'
+import { IFace, IFrameData, IVideoMetaData } from '../types'
 
-
-export interface IVideoMetaData {
-  duration: number,
-  frames: number,
-  width: number,
-  height: number,
-}
-
-export interface IFace {
-  id: number,
-  rect: faceapi.IRect,
-  landmarks: faceapi.IPoint[]
-}
 
 export interface ITimelineState {
   meta: IVideoMetaData
   frames: IFace[][]
 }
 
-export interface FrameData {
-  frame: number
-  faces: IFace[]
-}
 
 const roundTo2Decimal = (n: number) => {
   return Math.round(n * 100) / 100
@@ -92,7 +75,7 @@ class Timeline extends VuexModule implements ITimelineState {
   }
 
   @Mutation
-  public updateFrame(data: FrameData) {
+  public updateFrame(data: IFrameData) {
     data.faces.forEach((face) => {
       roundFaceDecimal(face)
     })

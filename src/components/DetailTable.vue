@@ -15,7 +15,8 @@ b-table.detail-table(
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import { AppModule } from '@/store/modules/app'
-import { TimelineModule, IFace } from '@/store/modules/timeline'
+import { TimelineModule } from '@/store/modules/timeline'
+import { IFace } from '@/store/types'
 import * as faceapi from 'face-api.js'
 
 interface Payload {

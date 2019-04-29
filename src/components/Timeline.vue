@@ -25,7 +25,8 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import { AppModule } from '@/store/modules/app'
-import { TimelineModule, IFace } from '@/store/modules/timeline'
+import { IFace } from '@/store/types'
+import { TimelineModule } from '@/store/modules/timeline'
 
 interface Payload {
   event: DragEvent,

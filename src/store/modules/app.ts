@@ -1,6 +1,7 @@
 import { VuexModule, Module, Mutation, Action, getModule } from 'vuex-module-decorators'
 import store from '@/store'
-import { TimelineModule, IFace } from './timeline'
+import { TimelineModule } from './timeline'
+import { IFace } from '../types'
 
 export interface IAppState {
   currentFrame: number

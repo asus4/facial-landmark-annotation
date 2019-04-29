@@ -30,7 +30,8 @@
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator'
 import { AppModule } from '@/store/modules/app'
-import { TimelineModule, IFace } from '@/store/modules/timeline'
+import { TimelineModule } from '@/store/modules/timeline'
+import { IFace } from '@/store/types'
 import * as faceapi from 'face-api.js'
 import LandmarkEditorFace from './LandmarkEditorFace.vue'
 import { toIRect, toIPoint } from '@/utils/faceapi'
