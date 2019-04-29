@@ -17,7 +17,8 @@ class App extends VuexModule implements IAppState {
   public fps: number = 30
   public videoUrl: string = ''
   public isAutoProcess: boolean = false
-  public selectedFace: IFace | null = null
+  public faceSelected: IFace | null = null
+  public faceCopied: IFace | null = null
 
   public get totalFrame(): number {
     return this.fps * this.duration
@@ -28,7 +29,11 @@ class App extends VuexModule implements IAppState {
   }
 
   public get canCopy(): boolean {
-    return this.selectedFace !== null
+    return this.faceSelected !== null
+  }
+
+  public get canPaste(): boolean {
+    return this.faceCopied !== null
   }
 
   @Mutation
@@ -37,7 +42,7 @@ class App extends VuexModule implements IAppState {
       return
     }
     this.currentFrame++
-    this.selectedFace = null
+    this.faceSelected = null
   }
 
   @Mutation
@@ -46,7 +51,7 @@ class App extends VuexModule implements IAppState {
       return
     }
     this.currentFrame--
-    this.selectedFace = null
+    this.faceSelected = null
   }
 
   @Mutation
@@ -55,7 +60,7 @@ class App extends VuexModule implements IAppState {
       return
     }
     this.currentFrame = value
-    this.selectedFace = null
+    this.faceSelected = null
   }
 
   @Mutation
@@ -93,7 +98,18 @@ class App extends VuexModule implements IAppState {
 
   @Mutation
   public selectFace(face: IFace | null) {
-    this.selectedFace = face
+    this.faceSelected = face
+  }
+
+  @Mutation
+  public copyFace() {
+    this.faceCopied = this.faceSelected
+  }
+
+  @Mutation
+  public pasteFace() {
+    console.log('TODO paseteface', this.faceCopied)
+
   }
 }
 

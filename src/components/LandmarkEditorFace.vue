@@ -51,7 +51,7 @@ export default class LandmarkEditorFace extends Vue {
   }
 
   private get isSelectedFace(): boolean {
-    return this.face === AppModule.selectedFace
+    return this.face === AppModule.faceSelected
   }
 
   private onMouseDown(e: MouseEvent, index: number) {

@@ -69,12 +69,12 @@ export default class Menu extends Vue {
       items: [
         {
           name: 'Copy',
-          method: this.copy,
+          method: AppModule.copyFace,
           keymap: ['ctrl', 'c'],
         },
         {
           name: 'Paste',
-          method: this.paste,
+          method: AppModule.pasteFace,
           keymap: ['ctrl', 'v'],
         },
         {
@@ -127,14 +127,6 @@ export default class Menu extends Vue {
     // reduce json size before save
     TimelineModule.reduceDataSize()
     saveAs(TimelineModule.jsonBlob, 'landmarks.json')
-  }
-
-  private copy() {
-    console.log('todo copy')
-  }
-
-  private paste() {
-    console.log('todo paste')
   }
 
   private showHelp() {
