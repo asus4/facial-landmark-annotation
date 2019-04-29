@@ -6,13 +6,20 @@
     g(:transform="`translate(${getPosX(current)}, 0)`")
       line.current-position(x1="0" y1="0" x2="0" :y2="frameHeight + labelHeight")
       text.current-position-label(x="1" :y="labelHeight - 2") {{ current }}
+    //- Frame Texts
+    g
+      text.frame-text(
+        v-for="n in total"
+        :x="getPosX(n * labelInterval)" y="0"
+      ) {{ n * labelInterval }}
+
     //- Frames
-    g(
-      v-for="(faces, index) in frames"
-      :transform="`translate(${getPosX(index)}, ${labelHeight})`"
-      @click="() => current = index"
-    )
-      rect.frame(x="0" y="0" :width="frameWidth - 1" :height="frameHeight")
+    g(:transform="`translate(0, ${labelHeight})`")
+      rect.frame(v-for="(faces, index) in frames"
+        :x="getPosX(index)" y="0"
+        :width="frameWidth - 1" :height="frameHeight"
+        @click="() => current = index"
+      )
 </template>
 
 <script lang="ts">
@@ -34,9 +41,11 @@ export default class Timeline extends Vue {
   public $refs!: {
   }
 
-  private labelHeight = 12
+
   private frameWidth = 5
   private frameHeight = 15
+  private labelHeight = 10
+  private labelInterval = 50
 
   private get current(): number { return AppModule.currentFrame }
   private set current(n: number) { AppModule.setCurrentFrame(n) }
@@ -75,6 +84,10 @@ $barColor: #ff0000
 .current-position-label
   font: 12px sans-serif
   fill: $barColor
+
+.frame-text
+  font: 12px sans-serif
+  fill: #333333
 
 .frame
   fill: $color
