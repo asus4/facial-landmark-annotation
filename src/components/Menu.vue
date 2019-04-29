@@ -7,7 +7,11 @@ nav.navbar(role="navigation" aria-label="main navigation")
         .navbar-link {{ name }}
         .navbar-dropdown
           a.navbar-item(v-for="item in items" @click="item.method") {{ item.name }}
-            span(v-if="item.keymap") &nbsp({{ item.keymap }})
+            span(
+              v-if="item.keymap"
+              v-shortkey="item.keymap"
+              @shortkey="item.method"
+            ) &nbsp ({{ item.keymap.join('+') }})
   // for file loading
   input(ref="input" type="file" @change="onLoadFile")
 </template>
@@ -15,14 +19,13 @@ nav.navbar(role="navigation" aria-label="main navigation")
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { saveAs } from 'file-saver'
-import hotkeys from 'hotkeys-js'
 import { AppModule } from '@/store/modules/app'
 import { TimelineModule } from '@/store/modules/timeline'
 
 interface MenuItem {
   name: string,
   method: () => void,
-  keymap?: string
+  keymap?: string[]
 }
 
 interface MenuFolder {
@@ -46,7 +49,7 @@ export default class Menu extends Vue {
         {
           name: 'Load Video',
           method: this.loadVideo,
-          keymap: 'ctrl+o',
+          keymap: ['ctrl', 'o'],
         },
         {
           name: 'Load Json',
@@ -55,7 +58,7 @@ export default class Menu extends Vue {
         {
           name: 'Save Json',
           method: this.saveJson,
-          keymap: 'ctrl+s',
+          keymap: ['ctrl', 's'],
         },
       ],
     },
@@ -65,17 +68,17 @@ export default class Menu extends Vue {
         {
           name: 'Undo',
           method: this.undo,
-          keymap: 'ctrl+z',
+          keymap: ['ctrl', 'z'],
         },
         {
           name: 'Next Frame',
           method: AppModule.nextFrame,
-          keymap: '.',
+          keymap: ['.'],
         },
         {
           name: 'Prev Frame',
           method: AppModule.prevFrame,
-          keymap: ',',
+          keymap: [','],
         },
       ],
     },
@@ -89,31 +92,6 @@ export default class Menu extends Vue {
       ],
     },
   ]
-
-  private mounted() {
-    // Assign all keymaps
-    for (const folder of this.folders) {
-      for (const item of folder.items) {
-        if (item.keymap) {
-          hotkeys(item.keymap, (e: Event) => {
-            e.preventDefault()
-            item.method()
-          })
-        }
-      }
-    }
-  }
-
-  private destroyed() {
-    // Remove all key maps
-    for (const folder of this.folders) {
-      for (const item of folder.items) {
-        if (item.keymap) {
-          hotkeys.unbind(item.keymap)
-        }
-      }
-    }
-  }
 
   private loadVideo() {
     this.$dialog.confirm({

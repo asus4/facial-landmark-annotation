@@ -18,10 +18,10 @@
         )
   .zoom-ui
     b-tooltip(label="Zoom Out (z)" type="is-light" position="is-right")
-      button.button(@click="zoomOut")
+      button.button(@click="zoomOut" v-shortkey="['z']" @shortkey="zoomOut")
         b-icon(icon="magnify-minus")
     b-tooltip(label="Zoom In (x)" type="is-light" position="is-right")
-      button.button(@click="zoomIn")
+      button.button(@click="zoomIn" v-shortkey="['x']" @shortkey="zoomIn")
         b-icon(icon="magnify-plus")
 </template>
 
@@ -31,7 +31,6 @@ import { AppModule } from '@/store/modules/app'
 import { TimelineModule, IFace } from '@/store/modules/timeline'
 import * as faceapi from 'face-api.js'
 import LandmarkEditorFace from './LandmarkEditorFace.vue'
-import hotkeys from 'hotkeys-js'
 import { toIRect, toIPoint } from '@/utils/faceapi'
 
 @Component({
@@ -51,16 +50,6 @@ export default class LandmarkEditor extends Vue {
   private svgViewBox = '0 0 1280 720'
   private resolution: faceapi.IDimensions = new faceapi.Dimensions(0, 0)
   private zoom = 1
-
-  private mounted() {
-    hotkeys('z', this.zoomOut)
-    hotkeys('x', this.zoomIn)
-  }
-
-  private destroyed() {
-    hotkeys.unbind('z')
-    hotkeys.unbind('x')
-  }
 
   private get video() {
     return this.$refs.video
