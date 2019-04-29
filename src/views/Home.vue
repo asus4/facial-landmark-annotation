@@ -35,8 +35,8 @@ export default class Home extends Vue {
 
   private async mounted() {
     // Load models
-    // TODO put in local
-    const modelpath = 'https://justadudewhohacks.github.io/face-api.js/models'
+    // const modelpath = 'https://justadudewhohacks.github.io/face-api.js/models'
+    const modelpath = 'models'
     // await faceapi.loadSsdMobilenetv1Model(modelpath)
     await faceapi.loadTinyFaceDetectorModel(modelpath)
     await faceapi.loadFaceLandmarkModel(modelpath)
