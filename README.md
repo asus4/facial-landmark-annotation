@@ -1,6 +1,6 @@
 # facial-landmark-annotation
 
-[https://facial-landmark-annotation.netlify.com/](https://facial-landmark-annotation.netlify.com/)
+[https://asus4.github.io/facial-landmark-annotation/](https://asus4.github.io/facial-landmark-annotation/)
 
 ## Project setup
 
