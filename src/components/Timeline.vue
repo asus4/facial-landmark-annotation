@@ -2,16 +2,15 @@
 <template lang="pug">
 .timeline
   svg.scroller(:viewBox="svgViewBox" :style="svgStyle")
-    line.current-position(
-      :x1="getPosX(current)"
-      y1="0"
-      :x2="getPosX(current)"
-      :y2="frameHeight"
-    )
+    //- Bar
+    g(:transform="`translate(${getPosX(current)}, 0)`")
+      line.current-position(x1="0" y1="0" x2="0" :y2="frameHeight + labelHeight")
+      text.current-position-label(x="1" :y="labelHeight - 2") {{ current }}
+    //- Frames
     g(
       v-for="(faces, index) in frames"
-      :transform="`translate(${getPosX(index)}, 0)`"
-      @click="() => onFrameClick(index)"
+      :transform="`translate(${getPosX(index)}, ${labelHeight})`"
+      @click="() => current = index"
     )
       rect.frame(x="0" y="0" :width="frameWidth - 1" :height="frameHeight")
 </template>
@@ -20,7 +19,6 @@
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import { AppModule } from '@/store/modules/app'
 import { TimelineModule, IFace } from '@/store/modules/timeline'
-import * as faceapi from 'face-api.js'
 
 interface Payload {
   event: DragEvent,
@@ -34,9 +32,9 @@ interface Payload {
 export default class Timeline extends Vue {
 
   public $refs!: {
-    timeSlider: HTMLInputElement;
   }
 
+  private labelHeight = 12
   private frameWidth = 5
   private frameHeight = 15
 
@@ -47,20 +45,16 @@ export default class Timeline extends Vue {
 
   private get frames(): IFace[][] { return TimelineModule.frames }
 
-  private get svgViewBox(): string { return `0 0 ${this.getPosX(this.total)} ${this.frameHeight}` }
+  private get svgViewBox(): string { return `0 0 ${this.getPosX(this.total)} ${this.frameHeight + 20}` }
   private get svgStyle() {
     return {
       width: this.getPosX(this.total) + 'px',
-      height: this.frameHeight + 20 + 'px',
+      height: this.frameHeight + 40 + 'px',
     }
   }
 
   private getPosX(i: number) {
     return i * this.frameWidth
-  }
-
-  private onFrameClick(index: number) {
-    AppModule.setCurrentFrame(index)
   }
 }
 </script>
@@ -68,6 +62,7 @@ export default class Timeline extends Vue {
 <style lang="sass" scoped>
 
 $color: #8c67ef
+$barColor: #ff0000
 
 .timeline
   position: relative
@@ -75,7 +70,11 @@ $color: #8c67ef
   overflow-x: scroll
 
 .current-position
-  stroke: #ff0000
+  stroke: $barColor
+
+.current-position-label
+  font: 12px sans-serif
+  fill: $barColor
 
 .frame
   fill: $color
