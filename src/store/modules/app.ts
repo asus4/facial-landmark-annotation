@@ -10,6 +10,11 @@ export interface IAppState {
   videoUrl: string
 }
 
+const cloneFace = (face: IFace): IFace => {
+  return Object.assign({}, face)
+}
+
+
 @Module({ dynamic: true, store, name: 'app', namespaced: true })
 class App extends VuexModule implements IAppState {
 
@@ -104,13 +109,40 @@ class App extends VuexModule implements IAppState {
 
   @Mutation
   public copyFace() {
+    if (this.faceSelected === null) {
+      return
+    }
     this.faceCopied = this.faceSelected
   }
 
   @Mutation
   public pasteFace() {
-    console.log('TODO paseteface', this.faceCopied)
+    if (this.faceCopied === null) {
+      return
+    }
+    const current = TimelineModule.frames[this.currentFrame]
+    const newFace = cloneFace(this.faceCopied)
 
+    let faces: IFace[]
+    if (current === null || current.length === 0) {
+      faces = [newFace]
+    } else {
+      // find original ID
+      let id = 0
+      for (id = 0; id <= current.length; id++) {
+        if (!current.some((f) => f.id === id)) {
+          break
+        }
+      }
+      newFace.id = id
+      current.push(newFace)
+      faces = current
+    }
+
+    TimelineModule.updateFrame({
+      frame: this.currentFrame,
+      faces,
+    })
   }
 }
 

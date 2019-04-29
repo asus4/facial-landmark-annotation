@@ -46,7 +46,7 @@ export default class LandmarkEditor extends Vue {
     svg: SVGElement
   }
 
-  private faces: IFace[] = []
+  private get faces() { return TimelineModule.frames[AppModule.currentFrame] }
 
   // TODO: change landmark options from UI
   private options = new faceapi.TinyFaceDetectorOptions()
@@ -122,26 +122,28 @@ export default class LandmarkEditor extends Vue {
     this.zoom *= 2 / 3
   }
 
+
+
   private async detectFace() {
     const frame = AppModule.currentFrame
 
-    const cache = TimelineModule.frames[frame]
-    if (cache) {
+    if (this.faces) {
       console.log('use cache')
-      this.faces = cache
       return
     }
     const detections = await faceapi.detectAllFaces(this.video, this.options).withFaceLandmarks()
 
-    this.faces = detections.map((d, i) => {
+    const faces = detections.map((d, i) => {
       return {
         id: i,
         rect: toIRect(d.alignedRect.box),
         landmarks: d.landmarks.positions.map((p) => toIPoint(p)),
       }
     })
-    TimelineModule.updateFrame({frame, faces: this.faces})
+    TimelineModule.updateFrame({ frame, faces })
   }
+
+
 }
 </script>
 
