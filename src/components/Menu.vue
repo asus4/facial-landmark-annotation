@@ -78,6 +78,11 @@ export default class Menu extends Vue {
           keymap: ['ctrl', 'v'],
         },
         {
+          name: 'Delete',
+          method: AppModule.deleteFace,
+          keymap: ['backspace'],
+        },
+        {
           name: 'Next Frame',
           method: AppModule.nextFrame,
           keymap: ['.'],

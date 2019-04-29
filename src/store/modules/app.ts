@@ -144,6 +144,20 @@ class App extends VuexModule implements IAppState {
       faces,
     })
   }
+
+  @Mutation
+  public deleteFace() {
+    const current = TimelineModule.frames[this.currentFrame]
+    if (this.faceSelected === null
+      || current === null
+      || current.length === 0) {
+      return
+    }
+    const index = current.findIndex((f) => f === this.faceSelected)
+    if (index >= 0) {
+      current.splice(index, 1)
+    }
+  }
 }
 
 export const AppModule = getModule(App)
