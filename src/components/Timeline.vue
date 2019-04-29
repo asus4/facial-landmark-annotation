@@ -3,9 +3,9 @@
 .timeline
   svg.scroller(:viewBox="svgViewBox" :style="svgStyle")
     line.current-position(
-      :x1="current * (frameWidth + 1)"
+      :x1="getPosX(current)"
       y1="0"
-      :x2="current * (frameWidth + 1)"
+      :x2="getPosX(current)"
       :y2="frameHeight"
     )
     g(
@@ -47,10 +47,10 @@ export default class Timeline extends Vue {
 
   private get frames(): IFace[][] { return TimelineModule.frames }
 
-  private get svgViewBox(): string { return `0 0 ${this.total * (this.frameWidth + 1)} ${this.frameHeight}` }
+  private get svgViewBox(): string { return `0 0 ${this.getPosX(this.total)} ${this.frameHeight}` }
   private get svgStyle() {
     return {
-      width: (this.total * (this.frameWidth + 1)) + 'px',
+      width: this.getPosX(this.total) + 'px',
       height: this.frameHeight + 20 + 'px',
     }
   }
