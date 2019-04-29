@@ -9,13 +9,13 @@
     //- Frame Texts
     g
       text.frame-text(
-        v-for="n in total"
+        v-for="n in labeledFrameCount"
         :x="getPosX(n * labelInterval)" y="0"
       ) {{ n * labelInterval }}
-
     //- Frames
     g(:transform="`translate(0, ${labelHeight})`")
       rect.frame(v-for="(faces, index) in frames"
+        :class="getFrameClass(faces)"
         :x="getPosX(index)" y="0"
         :width="frameWidth - 1" :height="frameHeight"
         @click="() => current = index"
@@ -51,6 +51,7 @@ export default class Timeline extends Vue {
   private set current(n: number) { AppModule.setCurrentFrame(n) }
 
   private get total(): number { return Math.ceil(AppModule.totalFrame) }
+  private get labeledFrameCount(): number { return Math.floor(this.total / this.labelInterval) }
 
   private get frames(): IFace[][] { return TimelineModule.frames }
 
@@ -65,13 +66,35 @@ export default class Timeline extends Vue {
   private getPosX(i: number) {
     return i * this.frameWidth
   }
+
+  private getFrameClass(frame: IFace[]) {
+    if (!frame) {
+      return 'frame-null'
+    }
+    const len = frame.length
+    if (len === 0) {
+      return 'frame-blank'
+    }
+    if (len === 1) {
+      return 'frame-1'
+    }
+    if (len === 2) {
+      return 'frame-2'
+    }
+    return 'frame-many'
+  }
 }
 </script>
 
 <style lang="sass" scoped>
 
-$color: #8c67ef
 $barColor: #ff0000
+
+$nullFrameColor: hsl(0, 0%, 71%)
+$blankFrameColor: hsl(0, 0%, 48%)
+$found1Color: hsl(271, 25%, 71%)
+$found2Color: hsl(271, 75%, 71%)
+$foundManyColor: hsl(271, 100%, 71%)
 
 .timeline
   position: relative
@@ -89,9 +112,17 @@ $barColor: #ff0000
   font: 12px sans-serif
   fill: #333333
 
-.frame
-  fill: $color
-  &:hover
+.frame:hover
     opacity: 0.5
+.frame-null
+  fill: $nullFrameColor
+.frame-blank
+  fill: $blankFrameColor
+.frame-1
+  fill: $found1Color
+.frame-2
+  fill: $found2Color
+.frame-many
+  fill: $foundManyColor
 
 </style>
