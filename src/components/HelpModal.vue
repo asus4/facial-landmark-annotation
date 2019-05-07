@@ -29,6 +29,9 @@ export default class HelpModal extends Vue {
     [ 'Prev Frame', ',' ],
     [ 'Zoom In', 'x' ],
     [ 'Zoom Out', 'z' ],
+    [ 'Copy', 'ctrl + c' ],
+    [ 'Paste', 'ctrl + v' ],
+    [ 'Delete', 'backspace'],
   ]
 }
 </script>

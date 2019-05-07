@@ -23,6 +23,7 @@ import { saveAs } from 'file-saver'
 import { AppModule } from '@/store/modules/app'
 import { TimelineModule } from '@/store/modules/timeline'
 import HelpModal from '@/components/HelpModal.vue'
+import PreferencesModal from '@/components/PreferencesModal.vue'
 
 interface MenuItem {
   name: string,
@@ -92,6 +93,11 @@ export default class Menu extends Vue {
           method: AppModule.prevFrame,
           keymap: [','],
         },
+        {
+          name: 'Preferences',
+          method: this.showPreferences,
+          keymap: ['ctrl', '.'],
+        }
       ],
     },
     {
@@ -136,9 +142,17 @@ export default class Menu extends Vue {
 
   private showHelp() {
     this.$modal.open({
-        parent: this,
-        component: HelpModal,
-        hasModalCard: true,
+      parent: this,
+      component: HelpModal,
+      hasModalCard: true,
+    })
+  }
+
+  private showPreferences() {
+    this.$modal.open({
+      parent: this,
+      component: PreferencesModal,
+      hasModalCard: true,
     })
   }
 
