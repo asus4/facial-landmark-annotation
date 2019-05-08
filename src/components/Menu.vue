@@ -97,7 +97,7 @@ export default class Menu extends Vue {
           name: 'Preferences',
           method: this.showPreferences,
           keymap: ['ctrl', '.'],
-        }
+        },
       ],
     },
     {

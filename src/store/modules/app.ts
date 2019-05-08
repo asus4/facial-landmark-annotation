@@ -158,6 +158,12 @@ class App extends VuexModule implements IAppState {
       current.splice(index, 1)
     }
   }
+
+  @Mutation
+  public setFps(fps: number) {
+    this.fps = fps
+    TimelineModule.clearAllFrames()
+  }
 }
 
 export const AppModule = getModule(App)

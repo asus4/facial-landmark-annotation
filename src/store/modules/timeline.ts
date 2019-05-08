@@ -88,6 +88,11 @@ class Timeline extends VuexModule implements ITimelineState {
     return JSON.parse(json)
   }
 
+  @Mutation
+  public clearAllFrames() {
+    this.frames = new Array(Math.ceil(this.meta.frames))
+  }
+
 }
 
 export const TimelineModule = getModule(Timeline)
