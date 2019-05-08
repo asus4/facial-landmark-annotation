@@ -11,12 +11,12 @@
   "dependencies": {
     "buefy": "^0.7.5",
     "core-js": "^2.6.5",
-    "face-api.js": "^0.19.0",
+    "face-api.js": "^0.20.0",
     "file-saver": "^2.0.1",
     "register-service-worker": "^1.6.2",
     "vue": "^2.6.10",
     "vue-class-component": "^7.0.2",
-    "vue-property-decorator": "^8.1.0",
+    "vue-property-decorator": "^8.1.1",
     "vue-router": "^3.0.6",
     "vue-shortkey": "^3.1.7",
     "vuex": "^3.1.0"
