@@ -44,7 +44,10 @@ class App extends VuexModule implements IAppState {
 
   @Mutation
   public nextFrame() {
-    if (this.totalFrame <= this.currentFrame) {
+    // since getter in Mutation does not works
+    const totalFrame = this.fps * this.duration
+    if (totalFrame <= this.currentFrame) {
+      this.isAutoProcess = false
       return
     }
     this.currentFrame++
