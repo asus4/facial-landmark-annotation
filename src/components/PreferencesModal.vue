@@ -6,7 +6,7 @@
     b-field(label="Frame Rate:")
       b-numberinput(controls-position="compact"
         v-model="fps"
-        min="1" max="60"
+        min="1" max="60" step="0.01"
       )
   footer.modal-card-foot
 </template>
