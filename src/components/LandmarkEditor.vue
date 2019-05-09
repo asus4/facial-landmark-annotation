@@ -59,6 +59,7 @@ export default class LandmarkEditor extends Vue {
   private get isAutoProcess(): boolean { return AppModule.isAutoProcess }
 
   private get options() { return AppModule.faceDetectorOptions }
+  private get forceDetect(): boolean { return AppModule.forceDetect }
 
   private get scalerStyle() {
     return {
@@ -76,6 +77,14 @@ export default class LandmarkEditor extends Vue {
     }
   }
 
+  @Watch('forceDetect')
+  private async onForceDetectChanged(value: boolean) {
+    if (value) {
+      await this.detectFace(false)
+      AppModule.setForceDetect(false)
+    }
+  }
+
   private async onVideoLoaded() {
     this.svgViewBox = `0 0 ${this.video.videoWidth} ${this.video.videoHeight}`
     this.resolution = new faceapi.Dimensions(this.video.videoWidth, this.video.videoHeight)
@@ -88,11 +97,11 @@ export default class LandmarkEditor extends Vue {
       height: this.video.videoHeight,
     })
 
-    await this.detectFace()
+    await this.detectFace(true)
   }
 
   private async onVideoSeeked() {
-    await this.detectFace()
+    await this.detectFace(true)
     if (this.isAutoProcess) {
       AppModule.nextFrame()
     }
@@ -114,10 +123,10 @@ export default class LandmarkEditor extends Vue {
 
 
 
-  private async detectFace() {
+  private async detectFace(useCache: boolean) {
     const frame = AppModule.currentFrame
 
-    if (this.faces) {
+    if (useCache && this.faces) {
       console.log('use cache')
       return
     }

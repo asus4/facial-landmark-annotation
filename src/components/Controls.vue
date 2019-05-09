@@ -61,6 +61,7 @@ export default class Controls extends Vue {
   @Watch('scoreThreshold')
   private onScoreThresholdChnaged(value: number) {
     AppModule.setScoreThreshold(value)
+    AppModule.setForceDetect(true)
   }
 
 }

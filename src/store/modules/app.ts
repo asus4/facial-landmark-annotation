@@ -24,6 +24,7 @@ class App extends VuexModule implements IAppState {
   public fps: number = 30
   public videoUrl: string = ''
   public isAutoProcess: boolean = false
+  public forceDetect: boolean = false
   public faceSelected: IFace | null = null
   public faceCopied: IFace | null = null
   public faceDetectorOptions = new faceapi.TinyFaceDetectorOptions()
@@ -177,6 +178,11 @@ class App extends VuexModule implements IAppState {
       inputSize: current.inputSize,
       scoreThreshold: threshold,
     })
+  }
+
+  @Mutation
+  public setForceDetect(value: boolean) {
+    this.forceDetect = value
   }
 }
 
