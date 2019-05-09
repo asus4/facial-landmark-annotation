@@ -1,4 +1,5 @@
 import { VuexModule, Module, Mutation, Action, getModule } from 'vuex-module-decorators'
+import * as faceapi from 'face-api.js'
 import store from '@/store'
 import { TimelineModule } from './timeline'
 import { IFace } from '../types'
@@ -25,6 +26,7 @@ class App extends VuexModule implements IAppState {
   public isAutoProcess: boolean = false
   public faceSelected: IFace | null = null
   public faceCopied: IFace | null = null
+  public faceDetectorOptions = new faceapi.TinyFaceDetectorOptions()
 
   public get totalFrame(): number {
     return this.fps * this.duration
@@ -166,6 +168,15 @@ class App extends VuexModule implements IAppState {
   public setFps(fps: number) {
     this.fps = fps
     TimelineModule.clearAllFrames()
+  }
+
+  @Mutation
+  public setScoreThreshold(threshold: number) {
+    const current = this.faceDetectorOptions
+    this.faceDetectorOptions = new faceapi.TinyFaceDetectorOptions({
+      inputSize: current.inputSize,
+      scoreThreshold: threshold,
+    })
   }
 }
 

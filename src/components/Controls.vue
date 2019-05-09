@@ -12,13 +12,16 @@
       .columns
         .column
           button.button(@click="startAutoProcess") Start Auto
-        //- .column
-          button.button(@click="startAutoProcess") Copy Prev
+    b-field.column(label="Threshold:")
+      b-numberinput(controls-position="compact"
+        v-model="scoreThreshold"
+        min="0" max="1" step="0.05"
+      )
   b-loading(:active.sync="isAutoProcess" canCancel @onCancel="stopAutoProcess")
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator'
+import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
 import { AppModule } from '@/store/modules/app'
 import * as faceapi from 'face-api.js'
 
@@ -30,6 +33,8 @@ export default class Controls extends Vue {
   public $refs!: {
     timeSlider: HTMLInputElement;
   }
+
+  private scoreThreshold = new faceapi.TinyFaceDetectorOptions().scoreThreshold
 
   private get current(): number { return AppModule.currentFrame }
   private set current(n: number) { AppModule.setCurrentFrame(n) }
@@ -51,6 +56,11 @@ export default class Controls extends Vue {
 
   private stopAutoProcess() {
     this.isAutoProcess = false
+  }
+
+  @Watch('scoreThreshold')
+  private onScoreThresholdChnaged(value: number) {
+    AppModule.setScoreThreshold(value)
   }
 
 }
