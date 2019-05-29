@@ -69,12 +69,12 @@ export default class LandmarkEditorFace extends Vue {
 
   private onRectMouseMove(e: MouseEvent) {
     e.preventDefault()
-    if(e.buttons !== 1) {
+    if (e.buttons !== 1) {
       return // only dragging
     }
 
     const current = this.getTransformedPoint(e.clientX, e.clientY)
-    let diff = current.sub(this.rectMouseDown)
+    const diff = current.sub(this.rectMouseDown)
 
     // Move rect
     this.face.rect.x = this.faceMouseDown.rect.x + diff.x
@@ -84,7 +84,7 @@ export default class LandmarkEditorFace extends Vue {
       const origin = this.faceMouseDown.landmarks[i]
       return {
         x: origin.x + diff.x,
-        y: origin.y + diff.y
+        y: origin.y + diff.y,
       }
     })
   }
