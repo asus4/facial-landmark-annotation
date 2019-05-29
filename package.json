@@ -9,24 +9,24 @@
     "gh-pages": "npm run build && push-dir --dir=dist --branch=gh-pages --cleanup"
   },
   "dependencies": {
-    "buefy": "^0.7.5",
     "core-js": "^2.6.5",
+    "buefy": "^0.7.6",
     "face-api.js": "^0.20.0",
-    "file-saver": "^2.0.1",
+    "file-saver": "^2.0.2",
     "register-service-worker": "^1.6.2",
     "vue": "^2.6.10",
-    "vue-class-component": "^7.0.2",
+    "vue-class-component": "^7.1.0",
     "vue-property-decorator": "^8.1.1",
     "vue-router": "^3.0.6",
     "vue-shortkey": "^3.1.7",
-    "vuex": "^3.1.0"
+    "vuex": "^3.1.1"
   },
   "devDependencies": {
-    "@types/file-saver": "^2.0.0",
-    "@vue/cli-plugin-babel": "^3.7.0",
-    "@vue/cli-plugin-pwa": "^3.7.0",
-    "@vue/cli-plugin-typescript": "^3.7.0",
-    "@vue/cli-service": "^3.7.0",
+    "@types/file-saver": "^2.0.1",
+    "@vue/cli-plugin-babel": "^3.8.0",
+    "@vue/cli-plugin-pwa": "^3.8.0",
+    "@vue/cli-plugin-typescript": "^3.8.1",
+    "@vue/cli-service": "^3.8.0",
     "pug": "^2.0.3",
     "pug-plain-loader": "^1.0.0",
     "push-dir": "^0.4.1",
@@ -34,6 +34,6 @@
     "sass-loader": "^7.1.0",
     "typescript": "^3.4.5",
     "vue-template-compiler": "^2.6.10",
-    "vuex-module-decorators": "^0.9.8"
+    "vuex-module-decorators": "^0.9.9"
   }
 }
