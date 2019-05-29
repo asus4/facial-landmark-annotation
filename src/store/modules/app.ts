@@ -3,6 +3,7 @@ import * as faceapi from 'face-api.js'
 import store from '@/store'
 import { TimelineModule } from './timeline'
 import { IFace } from '../types'
+import { cloneFace } from '@/utils/editor'
 
 export interface IAppState {
   currentFrame: number
@@ -10,11 +11,6 @@ export interface IAppState {
   fps: number
   videoUrl: string
 }
-
-const cloneFace = (face: IFace): IFace => {
-  return Object.assign({}, face)
-}
-
 
 @Module({ dynamic: true, store, name: 'app', namespaced: true })
 class App extends VuexModule implements IAppState {

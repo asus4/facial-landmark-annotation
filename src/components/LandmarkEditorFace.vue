@@ -4,6 +4,7 @@ g
   rect.rect.svg-stroke(
     :x="rect.x" :y="rect.y" :width="rect.width" :height="rect.height"
     @mousedown="onRectMouseDown"
+    @mousemove="onRectMouseMove"
     :style="{ strokeWidth: isSelectedFace ? 3 : 1}"
   )
   text(:x="rect.x" :y="rect.y - 2") ID: {{ face.id }}
@@ -11,10 +12,10 @@ g
     v-for="(p, index) in positions"
     r="4" draggable="true"
     :cx="p.x" :cy="p.y" :key="index"
-    @mousedown="(e) => onMouseDown(e, index)"
-    @mousemove="(e) => onMouseMove(e, index)"
-    @mouseup="(e) => onMouseUp(e, index)"
-    @mouseleave="(e) => onMouseUp(e, index)"
+    @mousedown="(e) => onCircleMouseDown(e, index)"
+    @mousemove="(e) => onCircleMouseMove(e, index)"
+    @mouseup="(e) => onCircleMouseUp(e, index)"
+    @mouseleave="(e) => onCircleMouseUp(e, index)"
   )
 </template>
 
@@ -24,6 +25,7 @@ import { AppModule } from '@/store/modules/app'
 import { TimelineModule } from '@/store/modules/timeline'
 import { IFace } from '@/store/types'
 import * as faceapi from 'face-api.js'
+import { deepCloneFace } from '@/utils/editor'
 
 @Component({
   components: {},
@@ -38,6 +40,8 @@ export default class LandmarkEditorFace extends Vue {
 
   private svgPoint!: SVGPoint
   private selectedPoint = -1
+  private rectMouseDown: faceapi.Point = new faceapi.Point(0, 0)
+  private faceMouseDown: IFace = this.face
 
   private mounted() {
     this.svgPoint = (this.rootSvg as any).createSVGPoint()
@@ -55,32 +59,66 @@ export default class LandmarkEditorFace extends Vue {
     return this.face === AppModule.faceSelected
   }
 
-  private onMouseDown(e: MouseEvent, index: number) {
+  private onRectMouseDown(e: MouseEvent) {
+    e.preventDefault()
+    AppModule.selectFace(this.face)
+    // this.rectMouseDown = new faceapi.Point(e.clientX, e.clientY)
+    this.rectMouseDown = this.getTransformedPoint(e.clientX, e.clientY)
+    this.faceMouseDown = deepCloneFace(this.face)
+  }
+
+  private onRectMouseMove(e: MouseEvent) {
+    e.preventDefault()
+    if(e.buttons !== 1) {
+      return // only dragging
+    }
+
+    const current = this.getTransformedPoint(e.clientX, e.clientY)
+    let diff = current.sub(this.rectMouseDown)
+
+    // Move rect
+    this.face.rect.x = this.faceMouseDown.rect.x + diff.x
+    this.face.rect.y = this.faceMouseDown.rect.y + diff.y
+    // Move all landmakrs
+    this.face.landmarks = this.face.landmarks.map((p, i) => {
+      const origin = this.faceMouseDown.landmarks[i]
+      return {
+        x: origin.x + diff.x,
+        y: origin.y + diff.y
+      }
+    })
+  }
+
+  private onCircleMouseDown(e: MouseEvent, index: number) {
+    e.preventDefault()
     this.selectedPoint = index
   }
 
-  private onMouseMove(e: MouseEvent, index: number) {
+  private onCircleMouseMove(e: MouseEvent, index: number) {
+    e.preventDefault()
     if (this.selectedPoint === index) {
-      this.updatePoint(e, index)
+      this.updatePoint(index, this.getTransformedPoint(e.clientX, e.clientY))
     }
   }
 
-  private onMouseUp(e: MouseEvent, index: number) {
+  private onCircleMouseUp(e: MouseEvent, index: number) {
+    e.preventDefault()
     if (this.selectedPoint === index) {
-      this.updatePoint(e, index)
+      this.updatePoint(index, this.getTransformedPoint(e.clientX, e.clientY))
     }
     this.selectedPoint = -1
   }
 
-  private onRectMouseDown() {
-    AppModule.selectFace(this.face)
+
+  private updatePoint(index: number, p: faceapi.Point) {
+    Vue.set(this.positions, index, p)
   }
 
-  private updatePoint(e: MouseEvent, index: number) {
-    this.svgPoint.x = e.clientX
-    this.svgPoint.y = e.clientY
+  private getTransformedPoint(x: number, y: number): faceapi.Point {
+    this.svgPoint.x = x
+    this.svgPoint.y = y
     const p = this.svgPoint.matrixTransform(this.rootSvg.getScreenCTM()!.inverse())
-    Vue.set(this.positions, index, new faceapi.Point(p.x, p.y))
+    return new faceapi.Point(p.x, p.y)
   }
 
   private get allPath(): string {
