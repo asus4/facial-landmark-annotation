@@ -5,6 +5,8 @@ g
     :x="rect.x" :y="rect.y" :width="rect.width" :height="rect.height"
     @mousedown="onRectMouseDown"
     @mousemove="onRectMouseMove"
+    @mouseup="onRectMouseUp"
+    @mouseleave="onRectMouseUp"
     :style="{ strokeWidth: isSelectedFace ? 3 : 1}"
   )
   text(:x="rect.x" :y="rect.y - 2") ID: {{ face.id }}
@@ -40,7 +42,7 @@ export default class LandmarkEditorFace extends Vue {
 
   private svgPoint!: SVGPoint
   private selectedPoint = -1
-  private rectMouseDown: faceapi.Point = new faceapi.Point(0, 0)
+  private rectMouseDown: faceapi.Point = new faceapi.Point(-1, -1)
   private faceMouseDown: IFace = this.face
 
   private mounted() {
@@ -69,7 +71,7 @@ export default class LandmarkEditorFace extends Vue {
 
   private onRectMouseMove(e: MouseEvent) {
     e.preventDefault()
-    if (e.buttons !== 1) {
+    if (this.rectMouseDown.x < 0) {
       return // only dragging
     }
 
@@ -87,6 +89,10 @@ export default class LandmarkEditorFace extends Vue {
         y: origin.y + diff.y,
       }
     })
+  }
+
+  private onRectMouseUp(e: MouseEvent) {
+    this.rectMouseDown = new faceapi.Point(-1, -1)
   }
 
   private onCircleMouseDown(e: MouseEvent, index: number) {

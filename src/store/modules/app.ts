@@ -3,7 +3,7 @@ import * as faceapi from 'face-api.js'
 import store from '@/store'
 import { TimelineModule } from './timeline'
 import { IFace } from '../types'
-import { cloneFace } from '@/utils/editor'
+import { deepCloneFace } from '@/utils/editor'
 
 export interface IAppState {
   currentFrame: number
@@ -119,14 +119,19 @@ class App extends VuexModule implements IAppState {
 
   @Mutation
   public pasteFace() {
-    if (this.faceCopied === null) {
-      return
+    if (this.faceCopied !== null) {
+      AppModule.addFace(deepCloneFace(this.faceCopied))
     }
-    const current = TimelineModule.frames[this.currentFrame]
-    const newFace = cloneFace(this.faceCopied)
+  }
+
+  @Mutation
+  public addFace(face: IFace) {
+    const frame = this.currentFrame
+    const current = TimelineModule.frames[frame]
+    const newFace = face
 
     let faces: IFace[]
-    if (current === null || current.length === 0) {
+    if (current === undefined || current === null || current.length === 0) {
       faces = [newFace]
     } else {
       // find original ID
@@ -142,7 +147,7 @@ class App extends VuexModule implements IAppState {
     }
 
     TimelineModule.updateFrame({
-      frame: this.currentFrame,
+      frame,
       faces,
     })
   }
