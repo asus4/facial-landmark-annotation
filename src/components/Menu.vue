@@ -70,7 +70,7 @@ export default class Menu extends Vue {
       items: [
         {
           name: 'Copy',
-          method: AppModule.copyFace,
+          method: this.onCopy,
           keymap: ['ctrl', 'c'],
         },
         {
@@ -138,6 +138,18 @@ export default class Menu extends Vue {
     // reduce json size before save
     TimelineModule.reduceDataSize()
     saveAs(TimelineModule.jsonBlob, 'landmarks.json')
+  }
+
+  private onCopy() {
+    if (AppModule.faceSelected) {
+      AppModule.copyFace()
+      this.$toast.open('Copied')
+    } else {
+      this.$toast.open({
+          message: 'Select face to copy',
+          type: 'is-warning',
+      })
+    }
   }
 
   private showHelp() {
