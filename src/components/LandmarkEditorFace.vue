@@ -117,7 +117,10 @@ export default class LandmarkEditorFace extends Vue {
 
 
   private updatePoint(index: number, p: faceapi.Point) {
-    Vue.set(this.positions, index, p)
+    Vue.set(this.positions, index, {
+      x: p.x,
+      y: p.y,
+    })
   }
 
   private getTransformedPoint(x: number, y: number): faceapi.Point {
