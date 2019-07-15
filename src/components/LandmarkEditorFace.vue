@@ -1,18 +1,18 @@
 <template lang="pug">
 g
-  path.svg-stroke(:d="allPath")
+  path.svg-stroke(:d="allPath" :stroke-width="2 / zoom" )
   rect.rect.svg-stroke(
     :x="rect.x" :y="rect.y" :width="rect.width" :height="rect.height"
     @mousedown="onRectMouseDown"
     @mousemove="onRectMouseMove"
     @mouseup="onRectMouseUp"
-    @mouseleave="onRectMouseUp"
     :style="{ strokeWidth: isSelectedFace ? 3 : 1}"
   )
   text(:x="rect.x" :y="rect.y - 2") ID: {{ face.id }}
   circle(
     v-for="(p, index) in positions"
-    r="4" draggable="true"
+    :r="6 / zoom" :stroke-width="4 / zoom"
+    draggable="true"
     :cx="p.x" :cy="p.y" :key="index"
     @mousedown="(e) => onCircleMouseDown(e, index)"
     @mousemove="(e) => onCircleMouseMove(e, index)"
@@ -39,6 +39,9 @@ export default class LandmarkEditorFace extends Vue {
 
   @Prop({ default: null })
   public rootSvg!: SVGGraphicsElement
+
+  @Prop({ default: 1.0 })
+  public zoom!: number
 
   private svgPoint!: SVGPoint
   private selectedPoint = -1

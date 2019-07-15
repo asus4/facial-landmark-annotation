@@ -20,6 +20,7 @@
           :face="face"
           :key="index"
           :rootSvg="$refs.svg"
+          :zoom="zoom"
         )
         rect.newrect(v-if="newFaceRect.width > 0"
           :x="newFaceRect.x" :y="newFaceRect.y" :width="newFaceRect.width" :height="newFaceRect.height"
