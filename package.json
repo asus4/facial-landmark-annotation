@@ -27,6 +27,7 @@
     "@vue/cli-plugin-pwa": "^3.9.0",
     "@vue/cli-plugin-typescript": "^3.9.0",
     "@vue/cli-service": "^3.9.2",
+    "lodash": "^4.17.15",
     "pug": "^2.0.4",
     "pug-plain-loader": "^1.0.0",
     "push-dir": "^0.4.1",
