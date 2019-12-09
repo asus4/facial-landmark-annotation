@@ -113,7 +113,7 @@ export default class Menu extends Vue {
   ]
 
   private loadVideo() {
-    this.$dialog.confirm({
+    this.$buefy.dialog.confirm({
       message: 'Are you saved?',
       onConfirm: () =>  {
         const input = this.$refs.input
@@ -124,7 +124,7 @@ export default class Menu extends Vue {
   }
 
   private loadJson() {
-    this.$dialog.confirm({
+    this.$buefy.dialog.confirm({
       message: 'current landmarks will be overwritten.',
       onConfirm: () =>  {
         const input = this.$refs.input
@@ -143,9 +143,9 @@ export default class Menu extends Vue {
   private onCopy() {
     if (AppModule.faceSelected) {
       AppModule.copyFace()
-      this.$toast.open('Copied')
+      this.$buefy.toast.open('Copied')
     } else {
-      this.$toast.open({
+      this.$buefy.toast.open({
           message: 'Select face to copy',
           type: 'is-warning',
       })
@@ -153,7 +153,7 @@ export default class Menu extends Vue {
   }
 
   private showHelp() {
-    this.$modal.open({
+    this.$buefy.modal.open({
       parent: this,
       component: HelpModal,
       hasModalCard: true,
@@ -161,7 +161,7 @@ export default class Menu extends Vue {
   }
 
   private showPreferences() {
-    this.$modal.open({
+    this.$buefy.modal.open({
       parent: this,
       component: PreferencesModal,
       hasModalCard: true,
@@ -188,7 +188,7 @@ export default class Menu extends Vue {
   }
 
   private showNotSupported() {
-    this.$dialog.alert('This file is not supported.')
+    this.$buefy.dialog.alert('This file is not supported.')
   }
 
 }
